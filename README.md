@@ -1,7 +1,7 @@
 # retro-c-compiler
 
 ## What is this?
-A C compiler, targetting the Transputer for the Parachute project, and SIBO (the
+A C compiler, targetting the Transputer for the Parachute project, and EPOC16 (the
 OS of the Psion Series 3 PDAs). Built in Rust with TDD, and following the book
 ["Writing a C Compiler" by Nora Sandler]
 (https://nostarch.com/writing-c-compiler).
@@ -14,7 +14,7 @@ On Chapter 1, writing the compiler driver.
 
 # Overview
 The intention is to build a C compiler using the progressive approach from
-Nora's book. Following the book closely for the SIBO target; adapting it as
+Nora's book. Following the book closely for the EPOC16 target; adapting it as
 needed for the Transputer, which is quite different to the 8086.
 
 * Language: (eventually) C89, some C99 features; Objective-C extensions.
@@ -30,7 +30,7 @@ It should be able to generate optimised assembly for the Parachute
 TMASM assembler, for the T425ish that is currently emulated.
 * Target: T425
 
-## SIBO requirements
+## EPOC16 requirements
 It should generate optimised assembly for an as-yet-undecided assembler.
 * Target: 8086; NEC V20 extensions
 * Replicate the output of JPI/Clarion TopSpeed C 3.10 as closely as possible
