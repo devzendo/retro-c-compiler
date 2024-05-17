@@ -18,7 +18,8 @@ Nora's book. Following the book closely for the EPOC16 target; adapting it as
 needed for the Transputer, which is quite different to the 8086.
 
 * Language: (eventually) C89, some C99 features; Objective-C extensions.
-* Runs on: Linux, HaikuOS, Windows, the BSD family, macOS.
+* Runs on: Linux (Debian derivatives), HaikuOS, Windows, the BSD family, macOS.
+  Maybe docker?
 * Continuous test/build provided by CircleCI (Linux).
 
 This project will provide a compiler driver, and the C compiler itself. It will
@@ -43,6 +44,10 @@ It should generate optimised assembly for an as-yet-undecided assembler.
 All code is in Rust, and is developed as far as is practical using Test Driven
 Development.
 
+The intention with TDD is two-fold: 
+* to provide a pressure against coupled designs (if it's hard to get into a test, it's too coupled)
+* to provide an indicator of quality (if all the tests pass, we can be confident it is shippable)
+
 ## Project structure
 The project uses Cargo workspaces, with several modules in subdirectories
 under the 'crates' directory: See [https://matklad.github.io/2021/08/22/large-rust-workspaces.html]
@@ -59,6 +64,12 @@ To run tests, and build the binaries:
 * cargo test
 * cargo build --release
 
+This will give you two executables: `target/release/rcc` and `target/release/rcc1`.
+
+# Packaging
+At some point, the executables will be packaged into the relevant package formats for the
+various OSs: .deb, whatever HaikuOS uses, .msi, .pkg.. or perhaps just a .zip that you
+extract somewhere and add to the PATH.
 
 # Documentation
 When there is some, it'll be in the 'docs' directory.
