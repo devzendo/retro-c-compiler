@@ -40,6 +40,14 @@ It should generate optimised assembly for an as-yet-undecided assembler.
 All code is in Rust, and is developed as far as is practical using Test Driven
 Development.
 
+## Project structure
+The project uses Cargo workspaces, with several modules in subdirectories
+under the 'crates' directory:
+* rcc is the main compiler driver, the program you use to do compilation. It
+  calls the preprocessor, assembler etc.
+* rcc1 is the C compiler proper. It transates preprocessed C into the
+  appropriate assembler.
+
 ## Building
 You will need Rust, at least version 1.75.0. Only the stable version is used.
 To run tests, and build the binaries:
