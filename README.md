@@ -7,7 +7,9 @@ OS of the Psion Series 3 PDAs). Built in Rust with TDD, and following the book
 (https://nostarch.com/writing-c-compiler).
 
 ## Project Status
-Started May 2024, there's currently nothing to see here.
+Started May 2024, there's currently just the overall project structure and a
+couple of "Hello World" programs.
+
 On Chapter 1, writing the compiler driver.
 
 # Overview
@@ -17,6 +19,7 @@ needed for the Transputer, which is quite different to the 8086.
 
 * Language: (eventually) C89, some C99 features; Objective-C extensions.
 * Runs on: Linux, HaikuOS, Windows, the BSD family, macOS.
+* Continuous test/build provided by CircleCI (Linux).
 
 This project will provide a compiler driver, and the C compiler itself. It will
 not provide a preprocessor (we'll depend on gcc's preprocessor), assembler, or
@@ -62,7 +65,7 @@ When there is some, it'll be in the 'docs' directory.
 
 
 # Acknowledgements
-Alex Brown for planting the seed of the project.
+Alex Brown for planting the seed of the project. See [https://hackaday.io/project/161291-the-last-psion]
 
 Nora Sandler for her blog posts, that eventually turned into the 'Writing a C
 Compiler' book.
