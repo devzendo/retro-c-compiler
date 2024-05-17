@@ -42,7 +42,8 @@ Development.
 
 ## Project structure
 The project uses Cargo workspaces, with several modules in subdirectories
-under the 'crates' directory:
+under the 'crates' directory: See [https://matklad.github.io/2021/08/22/large-rust-workspaces.html]
+
 * rcc is the main compiler driver, the program you use to do compilation. It
   calls the preprocessor, assembler etc.
 * rcc1 is the C compiler proper. It transates preprocessed C into the
