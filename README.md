@@ -58,7 +58,7 @@ under the 'crates' directory: See [https://matklad.github.io/2021/08/22/large-ru
   appropriate assembler.
 
 ## Building
-You will need Rust, at least version 1.75.0. Only the stable version is used.
+You will need Rust, at least version 1.67.0. Only the stable version is used.
 To run tests, and build the binaries:
 
 * cargo test
