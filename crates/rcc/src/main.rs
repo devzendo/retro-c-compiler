@@ -90,3 +90,9 @@ fn main() {
         exit(1);
     }
 }
+
+
+
+#[cfg(test)]
+#[path = "./main_spec.rs"]
+mod main_spec;
