@@ -5,7 +5,7 @@ use std::{env, ffi::OsString, path::Path, process::exit};
 use anyhow::{bail, Result};
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use driver::DriverOptions;
-use log::info;
+use log::{debug, info};
 
 mod driver;
 
@@ -82,16 +82,22 @@ where
 }
 
 fn main() {
-    info!("Hello from the rcc compiler driver!");
-    if let Ok(driver_options) = parse_and_validate(&mut env::args_os()) {
-        info!("driver options: {:?}", driver_options);
-    } else {
-        // Errors have been logged already.
-        exit(1);
+    if env::var_os("RUST_LOG").is_none() {
+        env::set_var("RUST_LOG", "INFO");
+    }
+    env_logger::init();
+
+    match parse_and_validate(&mut env::args_os()) {
+        Ok(driver_options) => {
+            debug!("driver options: {:?}", driver_options);
+        }
+        Err(err) => {
+            // --help and --version come in here, and these aren't errors, so log them as info.
+            info!("{}", err);
+            exit(1);
+        }
     }
 }
-
-
 
 #[cfg(test)]
 #[path = "./main_spec.rs"]
