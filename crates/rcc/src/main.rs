@@ -60,9 +60,9 @@ fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOptions>
                 }
                 Ok(DriverOptions {
                     c_file: Box::new(file_path.to_owned()),
-                    lex: false,
-                    parse: false,
-                    codegen: false,
+                    lex: arguments.get_flag("lex"),
+                    parse: arguments.get_flag("parse"),
+                    codegen: arguments.get_flag("codegen"),
                 })
             } else {
                 bail!(format!("'{}' is not a C filename", file))
