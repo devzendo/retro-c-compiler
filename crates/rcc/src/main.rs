@@ -1,9 +1,10 @@
 extern crate clap;
 
-use std::{env, ffi::OsString, process::exit};
+use std::{env, ffi::OsString, path::Path, process::exit};
 
 use anyhow::{bail, Result};
 use clap::{Arg, ArgAction, ArgMatches, Command};
+use driver::DriverOptions;
 use log::info;
 
 mod driver;
@@ -53,7 +54,16 @@ fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOptions>
     match file {
         Some(file) => {
             if file.to_lowercase().ends_with(".c") {
-                todo!();
+                let file_path = Path::new(file);
+                if !file_path.exists() {
+                    bail!(format!("'{}' could not be found", file));
+                }
+                Ok(DriverOptions {
+                    c_file: Box::new(file_path.to_owned()),
+                    lex: false,
+                    parse: false,
+                    codegen: false,
+                })
             } else {
                 bail!(format!("'{}' is not a C filename", file))
             }

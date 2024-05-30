@@ -1,11 +1,11 @@
-use std::path::Path;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 pub struct DriverOptions {
-    c_file: Box<Path>,
-    lex: bool,
-    parse: bool,
-    codegen: bool,
+    pub c_file: Box<PathBuf>,
+    pub lex: bool,
+    pub parse: bool,
+    pub codegen: bool,
 }
 
 struct Driver {}
