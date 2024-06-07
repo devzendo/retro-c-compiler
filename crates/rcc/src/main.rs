@@ -8,6 +8,7 @@ use driver::DriverOptions;
 use log::{debug, info};
 
 mod driver;
+mod executor;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
