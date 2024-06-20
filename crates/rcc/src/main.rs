@@ -4,7 +4,8 @@ use std::{env, ffi::OsString, path::Path, process::exit};
 
 use anyhow::{bail, Result};
 use clap::{Arg, ArgAction, ArgMatches, Command};
-use driver::DriverOptions;
+use driver::{Driver, DriverOptions};
+use executor::CommandExecutor;
 use log::{debug, info};
 
 mod driver;
@@ -88,16 +89,21 @@ fn main() {
     }
     env_logger::init();
 
-    match parse_and_validate(&mut env::args_os()) {
+    let driver_options = match parse_and_validate(&mut env::args_os()) {
         Ok(driver_options) => {
             debug!("driver options: {:?}", driver_options);
+            driver_options
         }
         Err(err) => {
             // --help and --version come in here, and these aren't errors, so log them as info.
             info!("{}", err);
             exit(1);
         }
-    }
+    };
+
+    let command_executor = CommandExecutor::default();
+    let driver = Driver::new(driver_options, Box::new(command_executor));
+
 }
 
 #[cfg(test)]
