@@ -33,14 +33,8 @@ pub trait Executor {
     fn run(&mut self, args: Vec<String>) -> Result<Execution>;
 }
 
+#[derive(Default)]
 pub struct CommandExecutor {
-}
-
-impl CommandExecutor {
-    fn new() -> Self {
-        Self {
-        }
-    }
 }
 
 impl Executor for CommandExecutor {
