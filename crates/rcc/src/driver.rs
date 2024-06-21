@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 use crate::executor::Executor;
+use crate::suffix_translator::SuffixTranslator;
 
 #[derive(Debug)]
 pub struct DriverOptions {
@@ -23,6 +24,7 @@ impl Driver {
         }
     }
 }
+
 #[cfg(test)]
 #[path = "./driver_spec.rs"]
 mod driver_spec;

@@ -10,6 +10,7 @@ use log::{debug, info};
 
 mod driver;
 mod executor;
+mod suffix_translator;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
