@@ -14,14 +14,14 @@ mod executor_spec {
 
     #[test]
     fn empty_command() {
-        let mut e = CommandExecutor::default();
+        let e = CommandExecutor::default();
         let ex = e.run(vec![]);
         assert_that!(ex.unwrap_err().to_string(), equal_to("No command given"));
     }
 
     #[test]
     fn command_does_not_exist() {
-        let mut e = CommandExecutor::default();
+        let e = CommandExecutor::default();
         let ex = e.run(vec!["frobnicate".to_owned()]);
         // TODO: CROSSPLATFORM
         // There will be portability differences wrt this message.
@@ -34,7 +34,7 @@ mod executor_spec {
     #[test]
     fn command_exists_and_has_output() {
         // TODO: CROSSPLATFORM
-        let mut e = CommandExecutor::default();
+        let e = CommandExecutor::default();
         let ex = e.run(vec!["ls".to_owned(), "Cargo.toml".to_owned()]);
         let es = ex.ok().unwrap();
         assert_that!(es.code().unwrap(), equal_to(0));
@@ -47,7 +47,7 @@ mod executor_spec {
     #[test]
     fn command_exists_and_has_error_output() {
         // TODO: CROSSPLATFORM
-        let mut e = CommandExecutor::default();
+        let e = CommandExecutor::default();
         let ex = e.run(vec!["cat".to_owned(), "nonexistant.txt".to_owned()]);
         let es = ex.ok().unwrap();
         assert_that!(es.code().unwrap(), equal_to(1));

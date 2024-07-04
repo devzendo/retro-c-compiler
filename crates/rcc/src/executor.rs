@@ -1,6 +1,9 @@
 use std::process::Command;
 
 use anyhow::{bail, Result};
+
+use log::debug;
+#[cfg(test)]
 use mockall::automock;
 
 #[derive(Debug, Clone)]
@@ -30,7 +33,7 @@ impl Execution {
 
 #[cfg_attr(test, automock)]
 pub trait Executor {
-    fn run(&mut self, args: Vec<String>) -> Result<Execution>;
+    fn run(&self, args: Vec<String>) -> Result<Execution>;
 }
 
 #[derive(Default)]
@@ -38,11 +41,12 @@ pub struct CommandExecutor {
 }
 
 impl Executor for CommandExecutor {
-    fn run(&mut self, args: Vec<String>) -> Result<Execution> {
+    fn run(&self, args: Vec<String>) -> Result<Execution> {
         if args.is_empty() {
             bail!("No command given");
         }
         let args_split = args.split_first().unwrap();
+        debug!("Executing {:?}", args.clone().join(" "));
         let output = Command::new(args_split.0).args(args_split.1).output();
         // I could just capture the Output, rather than encapsulating it in the fields of the Execution,
         // however, Execution is our abstraction, can be constructed; Output, perhaps not so easy? And
@@ -50,11 +54,11 @@ impl Executor for CommandExecutor {
         // the Execution abstraction is specifically easy to test with, encapuslating hard-to-create internals.
         match output {
             Ok(output) => {
-                println!("status: {}", output.status);
+                debug!("status: {}", output.status);
                 let stdout = Some(String::from_utf8_lossy(&output.stdout).to_string());
-                println!("stdout: {}", stdout.as_ref().unwrap());
+                debug!("stdout: {}", stdout.as_ref().unwrap());
                 let stderr = Some(String::from_utf8_lossy(&output.stderr).to_string());
-                println!("stderr: {}", stderr.as_ref().unwrap());
+                debug!("stderr: {}", stderr.as_ref().unwrap());
                 Ok(Execution { exit_code: output.status.code(), stdout: stdout, stderr: stderr })
             }
             Err(err) => bail!("Could not run command '{}': {}", args_split.0, err),

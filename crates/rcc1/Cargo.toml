@@ -10,6 +10,7 @@ anyhow = "1.0.86"
 clap = { version = "3.2", features = ["derive"] }
 env_logger = "0.10"
 log = "0.4"
+sysexits = "0.8.1"
 
 [dev-dependencies]
 ctor = "0.2.6"

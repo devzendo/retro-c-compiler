@@ -5,11 +5,11 @@ pub struct SuffixTranslator {
 }
 
 impl SuffixTranslator {
-    fn new(c_file: PathBuf) -> Self {
+    pub fn new(c_file: PathBuf) -> Self {
         Self { c_file }
     }
 
-    fn preprocessor(&self) -> PathBuf {
+    pub fn preprocessor(&self) -> PathBuf {
         let mut out = self.c_file.clone();
         out.set_extension("i");
         out

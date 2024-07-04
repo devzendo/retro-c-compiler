@@ -6,10 +6,6 @@ mod suffix_translator_spec {
     use std::path::PathBuf;
 
     use hamcrest2::prelude::*;
-    use mockall::*;
-
-    use crate::driver::{Driver, DriverOptions};
-    use crate::executor::MockExecutor;
     use crate::suffix_translator::SuffixTranslator;
 
     #[ctor::ctor]

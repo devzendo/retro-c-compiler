@@ -1,12 +1,13 @@
 extern crate clap;
 
-use std::{env, ffi::OsString, path::Path, process::exit};
+use std::{env, ffi::OsString, path::Path};
 
 use anyhow::{bail, Result};
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use driver::{Driver, DriverOptions};
 use executor::CommandExecutor;
-use log::{debug, info};
+use log::{debug, error, info};
+use sysexits::ExitCode;
 
 mod driver;
 mod executor;
@@ -84,7 +85,7 @@ where
     validate_command_line(parsed)
 }
 
-fn main() {
+fn main() -> ExitCode {
     if env::var_os("RUST_LOG").is_none() {
         env::set_var("RUST_LOG", "INFO");
     }
@@ -98,13 +99,19 @@ fn main() {
         Err(err) => {
             // --help and --version come in here, and these aren't errors, so log them as info.
             info!("{}", err);
-            exit(1);
+            return ExitCode::Usage
         }
     };
 
     let command_executor = CommandExecutor::default();
     let driver = Driver::new(driver_options, Box::new(command_executor));
-
+    match driver.preprocess() {
+        Ok(_success) => todo!(),
+        Err(err) => {
+            error!("Could not run preprocessor: {}", err);
+            return ExitCode::Unavailable;
+        },
+    }
 }
 
 #[cfg(test)]

@@ -470,6 +470,7 @@ dependencies = [
  "hamcrest2",
  "log",
  "mockall",
+ "sysexits",
  "temp_testdir",
  "tempfile",
 ]
@@ -485,6 +486,7 @@ dependencies = [
  "hamcrest2",
  "log",
  "mockall",
+ "sysexits",
  "temp_testdir",
  "tempfile",
 ]
@@ -558,6 +560,12 @@ dependencies = [
  "quote",
  "unicode-ident",
 ]
+
+[[package]]
+name = "sysexits"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c4008983d29e823b1415f5f12732d5c9a44059795fb6218262cc0185668851e2"
 
 [[package]]
 name = "temp_testdir"
