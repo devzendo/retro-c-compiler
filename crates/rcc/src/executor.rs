@@ -1,18 +1,18 @@
-use std::process::{Command, ExitStatus};
+use std::process::Command;
 
 use anyhow::{bail, Result};
 use mockall::automock;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Execution {
-    exit_status: ExitStatus,
-    stdout: Option<String>,
-    stderr: Option<String>,
+    pub(crate) exit_code: Option<i32>,
+    pub(crate) stdout: Option<String>,
+    pub(crate) stderr: Option<String>,
 }
 
 impl Execution {
-    fn code(&self) -> i32 {
-        self.exit_status.code().unwrap()
+    fn code(&self) -> Option<i32> {
+        self.exit_code
     }
 
     fn stdout(&self) -> String {
@@ -28,7 +28,7 @@ impl Execution {
     }
 }
 
-#[automock]
+#[cfg_attr(test, automock)]
 pub trait Executor {
     fn run(&mut self, args: Vec<String>) -> Result<Execution>;
 }
@@ -44,6 +44,10 @@ impl Executor for CommandExecutor {
         }
         let args_split = args.split_first().unwrap();
         let output = Command::new(args_split.0).args(args_split.1).output();
+        // I could just capture the Output, rather than encapsulating it in the fields of the Execution,
+        // however, Execution is our abstraction, can be constructed; Output, perhaps not so easy? And
+        // mocking the Executor, and trying to create an arbitrary ExitStatus proved impossible. So,
+        // the Execution abstraction is specifically easy to test with, encapuslating hard-to-create internals.
         match output {
             Ok(output) => {
                 println!("status: {}", output.status);
@@ -51,7 +55,7 @@ impl Executor for CommandExecutor {
                 println!("stdout: {}", stdout.as_ref().unwrap());
                 let stderr = Some(String::from_utf8_lossy(&output.stderr).to_string());
                 println!("stderr: {}", stderr.as_ref().unwrap());
-                Ok(Execution { exit_status: output.status, stdout: stdout, stderr: stderr })
+                Ok(Execution { exit_code: output.status.code(), stdout: stdout, stderr: stderr })
             }
             Err(err) => bail!("Could not run command '{}': {}", args_split.0, err),
         }

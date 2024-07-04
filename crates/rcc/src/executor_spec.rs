@@ -37,7 +37,7 @@ mod executor_spec {
         let mut e = CommandExecutor::default();
         let ex = e.run(vec!["ls".to_owned(), "Cargo.toml".to_owned()]);
         let es = ex.ok().unwrap();
-        assert_that!(es.code(), equal_to(0));
+        assert_that!(es.code().unwrap(), equal_to(0));
         let out = es.stdout();
         assert_that!(out, equal_to("Cargo.toml\n"));
         let err: String = es.stderr();
@@ -50,7 +50,7 @@ mod executor_spec {
         let mut e = CommandExecutor::default();
         let ex = e.run(vec!["cat".to_owned(), "nonexistant.txt".to_owned()]);
         let es = ex.ok().unwrap();
-        assert_that!(es.code(), equal_to(1));
+        assert_that!(es.code().unwrap(), equal_to(1));
         let out: String = es.stdout();
         assert_that!(out, equal_to(""));
         let err = es.stderr();
