@@ -9,21 +9,27 @@ pub struct DriverOptions {
     pub codegen: bool,
 }
 
-pub struct Driver {
+pub trait Driver {
+    fn preprocess(&self) -> Result<Execution, anyhow::Error>;
+}
+
+pub struct DefaultDriver {
     driver_options: DriverOptions,
     executor: Box<dyn Executor>,
 
 }
 
-impl Driver {
+impl DefaultDriver {
     pub fn new(driver_options: DriverOptions, executor: Box<dyn Executor>) -> Self {
         Self {
             driver_options,
             executor,
         }
     }
-    
-    pub(crate) fn preprocess(&self) -> Result<Execution, anyhow::Error> {
+}
+
+impl Driver for DefaultDriver {
+    fn preprocess(&self) -> Result<Execution, anyhow::Error> {
         let xlat = SuffixTranslator::new(self.driver_options.c_file.to_path_buf());
         // TODO: CROSSPLATFORM EPOC16
         // TODO move this conversion mess into driver options...

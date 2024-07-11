@@ -7,7 +7,7 @@ mod driver_spec {
     use mockall::*;
     use std::path::PathBuf;
 
-    use crate::driver::{Driver, DriverOptions};
+    use crate::driver::{Driver, DefaultDriver, DriverOptions};
     use crate::executor::{Execution, MockExecutor};
 
     #[ctor::ctor]
@@ -39,7 +39,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
         };
-        let driver = Driver::new(driver_options, Box::new(mock_executor));
+        let driver = DefaultDriver::new(driver_options, Box::new(mock_executor));
         match driver.preprocess() {
             Ok(success) => {
                 assert_eq!(success.exit_code.unwrap(), 0i32);

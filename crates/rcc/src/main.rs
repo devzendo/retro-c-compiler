@@ -4,7 +4,7 @@ use std::{env, ffi::OsString, path::Path};
 
 use anyhow::{bail, Result};
 use clap::{Arg, ArgAction, ArgMatches, Command};
-use driver::{Driver, DriverOptions};
+use driver::{Driver, DefaultDriver, DriverOptions};
 use executor::CommandExecutor;
 use log::{debug, error, info};
 use sysexits::ExitCode;
@@ -104,7 +104,7 @@ fn main() -> ExitCode {
     };
 
     let command_executor = CommandExecutor::default();
-    let driver = Driver::new(driver_options, Box::new(command_executor));
+    let driver = DefaultDriver::new(driver_options, Box::new(command_executor));
     match driver.preprocess() {
         Ok(_success) => todo!(),
         Err(err) => {
