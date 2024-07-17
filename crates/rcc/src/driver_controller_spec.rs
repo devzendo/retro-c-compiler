@@ -4,7 +4,6 @@ extern crate hamcrest2;
 mod driver_controller_spec {
 
     use anyhow::bail;
-    use hamcrest2::prelude::*;
     use sysexits::ExitCode;
     use std::path::PathBuf;
 
@@ -37,9 +36,8 @@ mod driver_controller_spec {
         let sut = DefaultDriverController::new();
         let res = sut.drive(driver_options, Box::new(mock_driver));
 
-        assert_that!(&res, ok());
-        let exec = res.ok().unwrap();
-        assert_eq!(exec, ExitCode::Ok);
+        let exit_code = res.ok().unwrap();
+        assert_eq!(exit_code, ExitCode::Ok);
     }
 
     #[test]
@@ -49,9 +47,8 @@ mod driver_controller_spec {
         let driver_options = driver_options();
 
         let sut = DefaultDriverController::new();
-
         let res = sut.drive(driver_options, Box::new(mock_driver));
-        assert_that!(&res, err());
+
         let msg = res.err().unwrap().to_string();
         assert_eq!(msg, "Could not run preprocessor: Preprocessor failed");
     }
