@@ -4,12 +4,14 @@ use std::{env, ffi::OsString, path::Path};
 
 use anyhow::{bail, Result};
 use clap::{Arg, ArgAction, ArgMatches, Command};
-use driver::{Driver, DefaultDriver, DriverOptions};
+use driver::{DefaultDriver, DriverOptions};
+use driver_controller::{DefaultDriverController, DriverController};
 use executor::CommandExecutor;
 use log::{debug, error, info};
 use sysexits::ExitCode;
 
 mod driver;
+mod driver_controller;
 mod executor;
 mod suffix_translator;
 
@@ -104,11 +106,15 @@ fn main() -> ExitCode {
     };
 
     let command_executor = CommandExecutor::default();
-    let driver = DefaultDriver::new(driver_options, Box::new(command_executor));
-    match driver.preprocess() {
-        Ok(_success) => todo!(),
+    let driver = DefaultDriver::new(driver_options.clone(), Box::new(command_executor));
+    let driver_controller = DefaultDriverController::new();
+    match driver_controller.drive(driver_options, Box::new(driver)) {
+        Ok(code) => {
+            debug!("Exiting with code {code}");
+            return code;
+        },
         Err(err) => {
-            error!("Could not run preprocessor: {}", err);
+            error!("Exiting with error {err}");
             return ExitCode::Unavailable;
         },
     }

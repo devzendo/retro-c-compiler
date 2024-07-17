@@ -1,3 +1,5 @@
+/// The Executor allows the running of external programs and handling their exit codes and outputs.
+
 use std::process::Command;
 
 use anyhow::{bail, Result};

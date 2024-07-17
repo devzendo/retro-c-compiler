@@ -1,7 +1,13 @@
+/// The Driver is responsible for running specific external processes with the relevant arguments.
+/// It's the lower level of the driver - for the higher level, see the DriverController.
+
 use std::path::PathBuf;
 use crate::{executor::{Execution, Executor}, suffix_translator::SuffixTranslator};
 
-#[derive(Debug)]
+#[cfg(test)]
+use mockall::automock;
+
+#[derive(Debug, Clone)]
 pub struct DriverOptions {
     pub c_file: Box<PathBuf>,
     pub lex: bool,
@@ -9,6 +15,7 @@ pub struct DriverOptions {
     pub codegen: bool,
 }
 
+#[cfg_attr(test, automock)]
 pub trait Driver {
     fn preprocess(&self) -> Result<Execution, anyhow::Error>;
 }
