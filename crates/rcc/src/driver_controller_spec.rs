@@ -17,21 +17,26 @@ mod driver_controller_spec {
         let _ = env_logger::builder().is_test(true).try_init();
     }
 
+    fn driver_options() -> DriverOptions {
+        let c_file = PathBuf::from("file.c");
+        DriverOptions {
+            c_file: Box::new(c_file),
+            lex: false,
+            parse: false,
+            codegen: false,
+        }
+    }
+    
     #[test]
     fn calls_preprocessor() {
         let mut mock_driver = MockDriver::new();
         let expected_driver_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
         mock_driver.expect_preprocess().return_once(move || expected_driver_return);
+        let driver_options = driver_options();
 
-        let c_file = PathBuf::from("file.c");
-        let driver_options = DriverOptions {
-            c_file: Box::new(c_file),
-            lex: false,
-            parse: false,
-            codegen: false,
-        };
         let sut = DefaultDriverController::new();
         let res = sut.drive(driver_options, Box::new(mock_driver));
+
         assert_that!(&res, ok());
         let exec = res.ok().unwrap();
         assert_eq!(exec, ExitCode::Ok);
@@ -41,15 +46,10 @@ mod driver_controller_spec {
     fn preprocessor_fails() {
         let mut mock_driver = MockDriver::new();
         mock_driver.expect_preprocess().return_once(move || bail!("Preprocessor failed"));
+        let driver_options = driver_options();
 
-        let c_file = PathBuf::from("file.c");
-        let driver_options = DriverOptions {
-            c_file: Box::new(c_file),
-            lex: false,
-            parse: false,
-            codegen: false,
-        };
         let sut = DefaultDriverController::new();
+
         let res = sut.drive(driver_options, Box::new(mock_driver));
         assert_that!(&res, err());
         let msg = res.err().unwrap().to_string();
