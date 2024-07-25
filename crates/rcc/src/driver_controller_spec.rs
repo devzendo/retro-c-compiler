@@ -27,10 +27,12 @@ mod driver_controller_spec {
     }
     
     #[test]
-    fn calls_preprocessor() {
+    fn calls_phases_happy_path() {
         let mut mock_driver = MockDriver::new();
-        let expected_driver_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
-        mock_driver.expect_preprocess().return_once(move || expected_driver_return);
+        let expected_preprocessor_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
+        mock_driver.expect_preprocess().return_once(move || expected_preprocessor_return);
+        let expected_compiler_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
+        mock_driver.expect_compile().return_once(move || expected_compiler_return);
         let driver_options = driver_options();
 
         let sut = DefaultDriverController::new();

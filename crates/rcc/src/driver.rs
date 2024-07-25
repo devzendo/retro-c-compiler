@@ -18,6 +18,7 @@ pub struct DriverOptions {
 #[cfg_attr(test, automock)]
 pub trait Driver {
     fn preprocess(&self) -> Result<Execution, anyhow::Error>;
+    fn compile(&self) -> Result<Execution, anyhow::Error>;
 }
 
 pub struct DefaultDriver {
@@ -46,6 +47,10 @@ impl Driver for DefaultDriver {
         let args: Vec<String> = vec!["gcc", "-E", "-P", &c_file, "-o", &preprocessor_file].iter().map(|str| str.to_string()).collect();
 
         self.executor.run(args)
+    }
+    
+    fn compile(&self) -> Result<Execution,anyhow::Error> {
+        todo!()
     }
 }
 

@@ -28,15 +28,19 @@ impl DriverController for DefaultDriverController {
         _driver_options: DriverOptions,
         driver: Box<dyn Driver>,
     ) -> Result<ExitCode, anyhow::Error> {
+        // Preprocess...
         match driver.preprocess() {
             Ok(_success) => {
                 debug!("Preprocessor ok");
-                return Ok(ExitCode::Ok);
             }
             Err(err) => {
                 anyhow::bail!(format!("Could not run preprocessor: {}", err));
             }
         }
+
+        // Compile...
+        let _ = driver.compile();
+        return Ok(ExitCode::Ok);
     }
 }
 
