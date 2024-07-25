@@ -54,4 +54,19 @@ mod driver_controller_spec {
         let msg = res.err().unwrap().to_string();
         assert_eq!(msg, "Could not run preprocessor: Preprocessor failed");
     }
+
+    #[test]
+    fn compiler_fails() {
+        let mut mock_driver = MockDriver::new();
+        let expected_preprocessor_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
+        mock_driver.expect_preprocess().return_once(move || expected_preprocessor_return);
+        mock_driver.expect_compile().return_once(move || bail!("Compiler failed"));
+        let driver_options = driver_options();
+
+        let sut = DefaultDriverController::new();
+        let res = sut.drive(driver_options, Box::new(mock_driver));
+
+        let msg = res.err().unwrap().to_string();
+        assert_eq!(msg, "Could not run compiler: Compiler failed");
+    }
 }

@@ -28,6 +28,7 @@ impl DriverController for DefaultDriverController {
         _driver_options: DriverOptions,
         driver: Box<dyn Driver>,
     ) -> Result<ExitCode, anyhow::Error> {
+        
         // Preprocess...
         match driver.preprocess() {
             Ok(_success) => {
@@ -39,7 +40,15 @@ impl DriverController for DefaultDriverController {
         }
 
         // Compile...
-        let _ = driver.compile();
+        match driver.compile() {
+            Ok(_success) => {
+                debug!("Compiler ok");
+            }
+            Err(err) => {
+                anyhow::bail!(format!("Could not run compiler: {}", err));
+            }
+        }
+
         return Ok(ExitCode::Ok);
     }
 }
