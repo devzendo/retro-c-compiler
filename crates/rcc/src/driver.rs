@@ -50,7 +50,17 @@ impl Driver for DefaultDriver {
     }
     
     fn compile(&self) -> Result<Execution,anyhow::Error> {
-        todo!()
+        // TODO don't know what the actual command line will be just yet, so this is made up..
+        let xlat = SuffixTranslator::new(self.driver_options.c_file.to_path_buf());
+        // TODO: CROSSPLATFORM EPOC16
+        // TODO move this conversion mess into driver options...
+        let preprocessor = &xlat.preprocessor();
+        let preprocessor_file = preprocessor.as_os_str().to_string_lossy();
+        let compiler = &xlat.compiler();
+        let compiler_file = compiler.as_os_str().to_string_lossy();
+        let args: Vec<String> = vec!["rcc1", &preprocessor_file, "-o", &compiler_file].iter().map(|str| str.to_string()).collect();
+
+        self.executor.run(args)
     }
 }
 
