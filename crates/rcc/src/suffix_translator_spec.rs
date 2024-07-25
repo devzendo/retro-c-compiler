@@ -19,4 +19,11 @@ mod suffix_translator_spec {
         let xlat = SuffixTranslator::new(c_file);
         assert_that!(xlat.preprocessor(), equal_to(PathBuf::from("file.i")));
     }
+
+    #[test]
+    fn compiler() {
+        let c_file = PathBuf::from("file.c");
+        let xlat = SuffixTranslator::new(c_file);
+        assert_that!(xlat.compiler(), equal_to(PathBuf::from("file.o")));
+    }
 }

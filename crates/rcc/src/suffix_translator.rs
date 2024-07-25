@@ -14,6 +14,12 @@ impl SuffixTranslator {
         out.set_extension("i");
         out
     }
+
+    pub fn compiler(&self) -> PathBuf {
+        let mut out = self.c_file.clone();
+        out.set_extension("o");
+        out
+    }
 }
 
 #[cfg(test)]
