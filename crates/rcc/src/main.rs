@@ -13,6 +13,7 @@ use sysexits::ExitCode;
 mod driver;
 mod driver_controller;
 mod executor;
+mod file_utils;
 mod suffix_translator;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");

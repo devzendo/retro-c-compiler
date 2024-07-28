@@ -4,6 +4,7 @@
 use std::path::PathBuf;
 use crate::{executor::{Execution, Executor}, suffix_translator::SuffixTranslator};
 
+use log::{debug, warn};
 #[cfg(test)]
 use mockall::automock;
 
@@ -56,11 +57,21 @@ impl Driver for DefaultDriver {
         // TODO move this conversion mess into driver options...
         let preprocessor = &xlat.preprocessor();
         let preprocessor_file = preprocessor.as_os_str().to_string_lossy();
-        let compiler = &xlat.compiler();
-        let compiler_file = compiler.as_os_str().to_string_lossy();
-        let args: Vec<String> = vec!["rcc1", &preprocessor_file, "-o", &compiler_file].iter().map(|str| str.to_string()).collect();
+        if !preprocessor.exists() {
+            warn!("Preprocessed file {} does not exist", preprocessor_file);
+            // is there any point running the compiler in this case?
+        }
+        let object = &xlat.compiler();
+        let object_file = object.as_os_str().to_string_lossy();
+        let args: Vec<String> = vec!["rcc1", &preprocessor_file, "-o", &object_file].iter().map(|str| str.to_string()).collect();
 
-        self.executor.run(args)
+        let result = self.executor.run(args);
+        // tidy up after the preprocessor
+        match std::fs::remove_file(preprocessor) {
+            Ok(_) => debug!("Removed preprocessor file {}", preprocessor_file),
+            Err(e) => warn!("Could not remove preprocessor file {}: {}", preprocessor_file, e),
+        }
+        result
     }
 }
 
