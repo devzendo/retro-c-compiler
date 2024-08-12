@@ -8,7 +8,9 @@ mod main_spec {
     use hamcrest2::prelude::*;
     use temp_testdir::TempDir;
 
-    use crate::{file_utils::file_utils_spec::temp_config_dir, parse_command_line, validate_command_line};
+    use crate::command_line::{parse_command_line, validate_command_line};
+
+    use super::file_utils_test_helper::temp_config_dir;
 
     #[ctor::ctor]
     fn before_each() {
@@ -117,3 +119,7 @@ mod main_spec {
         (c_file, temp_dir)
     }
 }
+
+#[cfg(test)]
+#[path = "./file_utils_test_helper.rs"]
+pub mod file_utils_test_helper;

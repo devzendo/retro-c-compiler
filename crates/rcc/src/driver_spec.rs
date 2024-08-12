@@ -1,5 +1,4 @@
 extern crate hamcrest2;
-mod file_utils;
 
 #[cfg(test)]
 mod driver_spec {
@@ -11,7 +10,7 @@ mod driver_spec {
 
     use crate::driver::{Driver, DefaultDriver, DriverOptions};
     use crate::executor::{Execution, MockExecutor};
-    use crate::file_utils::file_utils_spec::temp_config_dir;
+    use crate::file_utils_test_helper::temp_config_dir;
 
     #[ctor::ctor]
     fn before_each() {
@@ -145,3 +144,7 @@ mod driver_spec {
 
     // TODO preprocessor file not deleted if compiler fails?
 }
+
+#[cfg(test)]
+#[path = "./file_utils_test_helper.rs"]
+pub mod file_utils_test_helper;
