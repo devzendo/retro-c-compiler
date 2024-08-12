@@ -16,5 +16,7 @@ sysexits = "0.8.1"
 [dev-dependencies]
 ctor = "0.2.6"
 hamcrest2 = "0.3"
+serial_test = "3.0.0"
 tempfile = "3.1.0"
 temp_testdir = "0.2"
+testing_logger = "0.1.1"

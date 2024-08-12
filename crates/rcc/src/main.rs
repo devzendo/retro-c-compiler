@@ -10,11 +10,11 @@ use executor::CommandExecutor;
 use log::{debug, error, info};
 use sysexits::ExitCode;
 
-mod driver;
-mod driver_controller;
-mod executor;
-mod file_utils;
-mod suffix_translator;
+pub mod driver;
+pub mod driver_controller;
+pub mod executor;
+pub mod file_utils;
+pub mod suffix_translator;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 

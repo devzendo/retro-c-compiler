@@ -4,29 +4,29 @@ use std::process::Command;
 
 use anyhow::{bail, Result};
 
-use log::debug;
+use log::{debug, error};
 #[cfg(test)]
 use mockall::automock;
 
 #[derive(Debug, Clone)]
 pub struct Execution {
-    pub(crate) exit_code: Option<i32>,
-    pub(crate) stdout: Option<String>,
-    pub(crate) stderr: Option<String>,
+    pub exit_code: Option<i32>,
+    pub stdout: Option<String>,
+    pub stderr: Option<String>,
 }
 
 impl Execution {
-    fn code(&self) -> Option<i32> {
+    pub fn code(&self) -> Option<i32> {
         self.exit_code
     }
 
-    fn stdout(&self) -> String {
+    pub fn stdout(&self) -> String {
         self.stdout
             .as_ref()
             .map_or_else(|| "".to_owned(), |s| s.clone())
     }
 
-    fn stderr(&self) -> String {
+    pub fn stderr(&self) -> String {
         self.stderr
             .as_ref()
             .map_or_else(|| "".to_owned(), |s| s.clone())
@@ -56,11 +56,18 @@ impl Executor for CommandExecutor {
         // the Execution abstraction is specifically easy to test with, encapuslating hard-to-create internals.
         match output {
             Ok(output) => {
-                debug!("status: {}", output.status);
                 let stdout = Some(String::from_utf8_lossy(&output.stdout).to_string());
-                debug!("stdout: {}", stdout.as_ref().unwrap());
                 let stderr = Some(String::from_utf8_lossy(&output.stderr).to_string());
-                debug!("stderr: {}", stderr.as_ref().unwrap());
+                if output.status.code().unwrap_or(1) == 0 {
+                    debug!("status: {}", output.status);
+                    debug!("stdout: {}", stdout.as_ref().unwrap());
+                    debug!("stderr: {}", stderr.as_ref().unwrap());
+                } else {
+                    error!("Execution failure of {:?}", args.clone().join(" "));
+                    error!("status: {}", output.status);
+                    error!("stdout: {}", stdout.as_ref().unwrap());
+                    error!("stderr: {}", stderr.as_ref().unwrap());
+                }
                 Ok(Execution { exit_code: output.status.code(), stdout: stdout, stderr: stderr })
             }
             Err(err) => bail!("Could not run command '{}': {}", args_split.0, err),
