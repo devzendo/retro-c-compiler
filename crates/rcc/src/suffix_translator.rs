@@ -15,11 +15,9 @@ impl SuffixTranslator {
         out
     }
 
-    // TODO The output of the compiler is an assembler file, not an object. 
-    // rename this to assembler
-    pub fn compiler(&self) -> PathBuf {
+    pub fn assembler(&self) -> PathBuf {
         let mut out = self.c_file.clone();
-        out.set_extension("o");
+        out.set_extension("asm");
         out
     }
 

@@ -62,10 +62,9 @@ impl Driver for DefaultDriver {
             warn!("Preprocessed file {} does not exist", preprocessor_file);
             // is there any point running the compiler in this case?
         }
-        // TODO The output of the compiler is an assembler file, not an object. 
-        let object = &xlat.compiler();
-        let object_file = object.as_os_str().to_string_lossy();
-        let args: Vec<String> = vec!["rcc1", &preprocessor_file, "-o", &object_file].iter().map(|str| str.to_string()).collect();
+        let assembly = &xlat.assembler();
+        let assembly_file = assembly.as_os_str().to_string_lossy();
+        let args: Vec<String> = vec!["rcc1", &preprocessor_file, "-o", &assembly_file].iter().map(|str| str.to_string()).collect();
 
         let result = self.executor.run(args);
         // tidy up after the preprocessor

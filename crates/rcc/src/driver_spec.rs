@@ -59,7 +59,7 @@ mod driver_spec {
     fn calls_compiler() {
         // TODO will need revisiting when we have a compiler!
         let mut mock_executor = MockExecutor::new();
-        let expected_executor_args: Vec<String> = vec!["rcc1", "file.i", "-o", "file.o"]
+        let expected_executor_args: Vec<String> = vec!["rcc1", "file.i", "-o", "file.asm"]
             .iter()
             .map(|str| str.to_string())
             .collect();
@@ -101,12 +101,12 @@ mod driver_spec {
         File::create(i_file.clone()).unwrap();
         let i_file_absolute = i_file.as_os_str().to_str().unwrap();
         assert!(i_file.exists(), "temp preprocessor file was not created");
-        let o_file = temp.join("file.o");
-        let o_file_absolute = o_file.as_os_str().to_str().unwrap();
+        let asm_file = temp.join("file.asm");
+        let asm_file_absolute = asm_file.as_os_str().to_str().unwrap();
 
         // Pretend to run the compiler..
         let mut mock_executor = MockExecutor::new();
-        let expected_executor_args: Vec<String> = vec!["rcc1", i_file_absolute, "-o", o_file_absolute]
+        let expected_executor_args: Vec<String> = vec!["rcc1", i_file_absolute, "-o", asm_file_absolute]
             .iter()
             .map(|str| str.to_string())
             .collect();
