@@ -26,4 +26,18 @@ mod suffix_translator_spec {
         let xlat = SuffixTranslator::new(c_file);
         assert_that!(xlat.compiler(), equal_to(PathBuf::from("file.o")));
     }
+
+    #[test]
+    fn binary() {
+        let c_file = PathBuf::from("file.c");
+        let xlat = SuffixTranslator::new(c_file);
+        assert_that!(xlat.binary(), equal_to(PathBuf::from("file.bin")));
+    }
+
+    #[test]
+    fn listing() {
+        let c_file = PathBuf::from("file.c");
+        let xlat = SuffixTranslator::new(c_file);
+        assert_that!(xlat.listing(), equal_to(PathBuf::from("file.lst")));
+    }
 }
