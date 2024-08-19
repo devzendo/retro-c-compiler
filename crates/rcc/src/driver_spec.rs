@@ -95,6 +95,44 @@ mod driver_spec {
     }
 
     #[test]
+    fn calls_assembler() {
+        let mut mock_executor = MockExecutor::new();
+        let expected_executor_args: Vec<String> = vec!["tmasm", "file.asm", "-o", "file.bin", "-l", "file.lst"]
+            .iter()
+            .map(|str| str.to_string())
+            .collect();
+        let expected_executor_return = Ok(Execution {
+            exit_code: Some(0i32),
+            stdout: None,
+            stderr: None,
+        });
+        mock_executor
+            .expect_run()
+            .with(predicate::eq(expected_executor_args))
+            .return_once(move |_| expected_executor_return);
+        let c_file = PathBuf::from("file.c");
+        let driver_options = DriverOptions {
+            c_file: Box::new(c_file),
+            lex: false,
+            parse: false,
+            codegen: false,
+        };
+
+        let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
+        match sut.assemble() {
+            Ok(success) => {
+
+                assert_eq!(success.exit_code.unwrap(), 0i32);
+                assert_that!(success.stdout, none());
+                assert_that!(success.stderr, none());
+            }
+            Err(err) => {
+                panic!("was not expecting an error: {}", err);
+            }
+        }
+    }
+
+    #[test]
     fn preprocessor_file_deleted_after_compilation() {
         let (temp, _temp_dir) = temp_config_dir();
         let i_file = temp.join("file.i");
@@ -143,6 +181,9 @@ mod driver_spec {
     }
 
     // TODO preprocessor file not deleted if compiler fails?
+
+    // Note: for now, not going to delete the assembler input file after the assembler has assembled it.
+    // There needs to be a 'don't delete temporaries' flag, perhaps.
 }
 
 #[cfg(test)]

@@ -76,10 +76,9 @@ impl Driver for DefaultDriver {
     }
     
     fn assemble(&self) -> Result<Execution,anyhow::Error> {
-        /*
         let xlat = SuffixTranslator::new(self.driver_options.c_file.to_path_buf());
         // TODO: CROSSPLATFORM EPOC16
-        let assembly = &xlat.compiler();
+        let assembly = &xlat.assembler();
         let assembly_file = assembly.as_os_str().to_string_lossy();
         let binary = &xlat.binary();
         let binary_file = binary.as_os_str().to_string_lossy();
@@ -94,8 +93,6 @@ impl Driver for DefaultDriver {
             Err(e) => warn!("Could not remove assembly file {}: {}", assembly_file, e),
         }
         result
-         */
-        todo!()
     }
 }
 
