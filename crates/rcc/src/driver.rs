@@ -14,6 +14,7 @@ pub struct DriverOptions {
     pub lex: bool,
     pub parse: bool,
     pub codegen: bool,
+    pub save_temps: bool,
 }
 
 #[cfg_attr(test, automock)]
@@ -67,10 +68,14 @@ impl Driver for DefaultDriver {
         let args: Vec<String> = vec!["rcc1", &preprocessor_file, "-o", &assembly_file].iter().map(|str| str.to_string()).collect();
 
         let result = self.executor.run(args);
-        // tidy up after the preprocessor
-        match std::fs::remove_file(preprocessor) {
-            Ok(_) => debug!("Removed preprocessor file {}", preprocessor_file),
-            Err(e) => warn!("Could not remove preprocessor file {}: {}", preprocessor_file, e),
+        // tidy up after the preprocessor unless requested
+        if self.driver_options.save_temps {
+            debug!("Retaining temporary preprocessor file {}", preprocessor_file);
+        } else {
+            match std::fs::remove_file(preprocessor) {
+                Ok(_) => debug!("Removed preprocessor file {}", preprocessor_file),
+                Err(e) => warn!("Could not remove preprocessor file {}: {}", preprocessor_file, e),
+            }
         }
         result
     }
@@ -87,7 +92,15 @@ impl Driver for DefaultDriver {
         let args: Vec<String> = vec!["tmasm", &assembly_file, "-o", &binary_file, "-l", &listing_file].iter().map(|str| str.to_string()).collect();
     
         let result = self.executor.run(args);
-        debug!("Retaining assembler file {} for now", assembly_file);
+        // tidy up after the assembler unless requested
+        if self.driver_options.save_temps {
+            debug!("Retaining temporary assembler file {}", assembly_file);
+        } else {
+            match std::fs::remove_file(assembly) {
+                Ok(_) => debug!("Removed assembler file {}", assembly_file),
+                Err(e) => warn!("Could not remove assembler file {}: {}", assembly_file, e),
+            }
+        }
         result
     }
 }

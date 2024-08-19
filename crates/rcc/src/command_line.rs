@@ -42,7 +42,14 @@ where
           .help("Run the lexer, parser, and assembly generation, but stop before code generation")
           .action(ArgAction::SetTrue),
       )
-      .try_get_matches_from(itr)
+      .arg(
+        Arg::new("save-temps")
+          .short('s')
+          .long("save-temps")
+          .help("Do not delete temporary preprocessor and assembly files")
+          .action(ArgAction::SetTrue)
+      )
+       .try_get_matches_from(itr)
 }
 
 pub fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOptions> {
@@ -59,6 +66,7 @@ pub fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOpti
                     lex: arguments.get_flag("lex"),
                     parse: arguments.get_flag("parse"),
                     codegen: arguments.get_flag("codegen"),
+                    save_temps: arguments.get_flag("save-temps"),
                 })
             } else {
                 bail!(format!("'{}' is not a C filename", file))

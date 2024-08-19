@@ -23,6 +23,7 @@ mod driver_controller_spec {
             lex: false,
             parse: false,
             codegen: false,
+            save_temps: false,
         }
     }
     
