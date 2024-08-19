@@ -87,11 +87,7 @@ impl Driver for DefaultDriver {
         let args: Vec<String> = vec!["tmasm", &assembly_file, "-o", &binary_file, "-l", &listing_file].iter().map(|str| str.to_string()).collect();
     
         let result = self.executor.run(args);
-        // tidy up after the assembler
-        match std::fs::remove_file(assembly) {
-            Ok(_) => debug!("Removed assembly file {}", assembly_file),
-            Err(e) => warn!("Could not remove assembly file {}: {}", assembly_file, e),
-        }
+        debug!("Retaining assembler file {} for now", assembly_file);
         result
     }
 }
