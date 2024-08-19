@@ -49,6 +49,16 @@ impl DriverController for DefaultDriverController {
             }
         }
 
+        // Assemble...
+        match driver.assemble() {
+            Ok(_success) => {
+                debug!("Assembler ok");
+            }
+            Err(err) => {
+                anyhow::bail!(format!("Could not run assembler: {}", err));
+            }
+        }
+
         return Ok(ExitCode::Ok);
     }
 }

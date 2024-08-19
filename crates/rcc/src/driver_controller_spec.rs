@@ -30,9 +30,11 @@ mod driver_controller_spec {
     fn calls_phases_happy_path() {
         let mut mock_driver = MockDriver::new();
         let expected_preprocessor_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
-        mock_driver.expect_preprocess().return_once(move || expected_preprocessor_return);
+        mock_driver.expect_preprocess().times(1).return_once(move || expected_preprocessor_return);
         let expected_compiler_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
-        mock_driver.expect_compile().return_once(move || expected_compiler_return);
+        mock_driver.expect_compile().times(1).return_once(move || expected_compiler_return);
+        let expected_assembler_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
+        mock_driver.expect_assemble().times(1).return_once(move || expected_assembler_return);
         let driver_options = driver_options();
 
         let sut = DefaultDriverController::new();
@@ -68,5 +70,22 @@ mod driver_controller_spec {
 
         let msg = res.err().unwrap().to_string();
         assert_eq!(msg, "Could not run compiler: Compiler failed");
+    }
+
+    #[test]
+    fn assembler_fails() {
+        let mut mock_driver = MockDriver::new();
+        let expected_preprocessor_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
+        mock_driver.expect_preprocess().return_once(move || expected_preprocessor_return);
+        let expected_compiler_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
+        mock_driver.expect_compile().return_once(move || expected_compiler_return);
+        mock_driver.expect_assemble().return_once(move || bail!("Assembler failed"));
+        let driver_options = driver_options();
+
+        let sut = DefaultDriverController::new();
+        let res = sut.drive(driver_options, Box::new(mock_driver));
+
+        let msg = res.err().unwrap().to_string();
+        assert_eq!(msg, "Could not run assembler: Assembler failed");
     }
 }

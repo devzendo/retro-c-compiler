@@ -20,6 +20,7 @@ pub struct DriverOptions {
 pub trait Driver {
     fn preprocess(&self) -> Result<Execution, anyhow::Error>;
     fn compile(&self) -> Result<Execution, anyhow::Error>;
+    fn assemble(&self) -> Result<Execution, anyhow::Error>;
 }
 
 pub struct DefaultDriver {
@@ -61,6 +62,7 @@ impl Driver for DefaultDriver {
             warn!("Preprocessed file {} does not exist", preprocessor_file);
             // is there any point running the compiler in this case?
         }
+        // TODO The output of the compiler is an assembler file, not an object. 
         let object = &xlat.compiler();
         let object_file = object.as_os_str().to_string_lossy();
         let args: Vec<String> = vec!["rcc1", &preprocessor_file, "-o", &object_file].iter().map(|str| str.to_string()).collect();
@@ -72,6 +74,29 @@ impl Driver for DefaultDriver {
             Err(e) => warn!("Could not remove preprocessor file {}: {}", preprocessor_file, e),
         }
         result
+    }
+    
+    fn assemble(&self) -> Result<Execution,anyhow::Error> {
+        /*
+        let xlat = SuffixTranslator::new(self.driver_options.c_file.to_path_buf());
+        // TODO: CROSSPLATFORM EPOC16
+        let assembly = &xlat.compiler();
+        let assembly_file = assembly.as_os_str().to_string_lossy();
+        let binary = &xlat.binary();
+        let binary_file = binary.as_os_str().to_string_lossy();
+        let listing = &xlat.listing();
+        let listing_file = listing.as_os_str().to_string_lossy();
+        let args: Vec<String> = vec!["tmasm", &assembly_file, "-o", &binary_file, "-l", &listing_file].iter().map(|str| str.to_string()).collect();
+    
+        let result = self.executor.run(args);
+        // tidy up after the assembler
+        match std::fs::remove_file(assembly) {
+            Ok(_) => debug!("Removed assembly file {}", assembly_file),
+            Err(e) => warn!("Could not remove assembly file {}: {}", assembly_file, e),
+        }
+        result
+         */
+        todo!()
     }
 }
 
