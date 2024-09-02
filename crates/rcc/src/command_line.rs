@@ -3,7 +3,7 @@ use std::{ffi::OsString, path::Path};
 use anyhow::{bail, Result};
 use clap::{Arg, ArgAction, ArgMatches, Command};
 
-use crate::driver::{self, DriverOptions};
+use crate::driver::{self, DriverOptions, TargetPlatform};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -67,6 +67,7 @@ pub fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOpti
                     parse: arguments.get_flag("parse"),
                     codegen: arguments.get_flag("codegen"),
                     save_temps: arguments.get_flag("save-temps"),
+                    target_platform: TargetPlatform::Transputer,
                 })
             } else {
                 bail!(format!("'{}' is not a C filename", file))

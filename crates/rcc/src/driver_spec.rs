@@ -8,7 +8,7 @@ mod driver_spec {
     use std::fs::File;
     use std::path::PathBuf;
 
-    use crate::driver::{Driver, DefaultDriver, DriverOptions};
+    use crate::driver::{DefaultDriver, Driver, DriverOptions, TargetPlatform};
     use crate::executor::{Execution, MockExecutor};
     use crate::file_utils_test_helper::temp_config_dir;
 
@@ -41,6 +41,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            target_platform: TargetPlatform::Transputer,
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
@@ -82,6 +83,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            target_platform: TargetPlatform::Transputer,
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
@@ -122,6 +124,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            target_platform: TargetPlatform::Transputer,
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
@@ -171,6 +174,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            target_platform: TargetPlatform::Transputer,
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
@@ -221,6 +225,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: true,
+            target_platform: TargetPlatform::Transputer,
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
@@ -276,6 +281,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            target_platform: TargetPlatform::Transputer,
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
@@ -328,6 +334,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: true,
+            target_platform: TargetPlatform::Transputer,
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));

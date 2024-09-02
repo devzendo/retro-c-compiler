@@ -7,7 +7,7 @@ mod driver_controller_spec {
     use sysexits::ExitCode;
     use std::path::PathBuf;
 
-    use crate::driver::{DriverOptions, MockDriver};
+    use crate::driver::{DriverOptions, MockDriver, TargetPlatform};
     use crate::driver_controller::{DefaultDriverController, DriverController};
     use crate::executor::Execution;
 
@@ -24,6 +24,7 @@ mod driver_controller_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            target_platform: TargetPlatform::Transputer,
         }
     }
     

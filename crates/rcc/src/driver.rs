@@ -9,12 +9,20 @@ use log::{debug, warn};
 use mockall::automock;
 
 #[derive(Debug, Clone)]
+pub enum TargetPlatform {
+    Transputer,
+    EPOC16,
+    X86_64,
+}
+
+#[derive(Debug, Clone)]
 pub struct DriverOptions {
     pub c_file: Box<PathBuf>,
     pub lex: bool,
     pub parse: bool,
     pub codegen: bool,
     pub save_temps: bool,
+    pub target_platform: TargetPlatform,
 }
 
 #[cfg_attr(test, automock)]
