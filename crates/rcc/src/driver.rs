@@ -8,8 +8,9 @@ use log::{debug, warn};
 #[cfg(test)]
 use mockall::automock;
 
-#[derive(Debug, Clone)]
+#[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub enum TargetPlatform {
+    #[default]
     Transputer,
     EPOC16,
     X86_64,

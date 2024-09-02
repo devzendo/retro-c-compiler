@@ -7,7 +7,7 @@ edition.workspace = true
 
 [dependencies]
 anyhow = "1.0.86"
-clap = { version = "3.2", features = ["derive"] }
+clap = { version = "4.5.16", features = ["derive"] }
 env_logger = "0.10"
 log = "0.4"
 mockall = "0.11.4"

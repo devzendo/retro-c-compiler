@@ -9,6 +9,7 @@ mod main_spec {
     use temp_testdir::TempDir;
 
     use crate::command_line::{parse_command_line, validate_command_line};
+    use crate::driver::TargetPlatform;
 
     use super::file_utils_test_helper::temp_config_dir;
 
@@ -22,7 +23,7 @@ mod main_spec {
         let arg_vec: Vec<&str> = vec!["rcc"];
         let result = parse_command_line(arg_vec);
         assert_that!(result.is_err(), equal_to(true));
-        assert_that!(result.unwrap_err().to_string(), equal_to("error: The following required arguments were not provided:\n    <file>\n\nUSAGE:\n    rcc [OPTIONS] <file>\n\nFor more information try --help\n"));
+        assert_that!(result.unwrap_err().to_string(), equal_to("error: the following required arguments were not provided:\n  <file>\n\nUsage: rcc <file>\n\nFor more information, try '--help'.\n"));
     }
 
     #[test]
@@ -77,6 +78,7 @@ mod main_spec {
         assert_that!(driver_options.lex, equal_to(false));
         assert_that!(driver_options.parse, equal_to(false));
         assert_that!(driver_options.codegen, equal_to(false));
+        assert_that!(driver_options.target_platform, equal_to(TargetPlatform::Transputer));
     }
 
     #[test]
@@ -110,6 +112,24 @@ mod main_spec {
         assert_that!(driver_options.lex, equal_to(false));
         assert_that!(driver_options.parse, equal_to(false));
         assert_that!(driver_options.codegen, equal_to(true));
+    }
+
+    #[test]
+    fn architecture_epoc16() {
+        let (c_file, _temp_dir) = create_file();
+
+        let arg_vec = vec!["rcc", c_file.to_str().unwrap(), "-a", "EPOC16"];
+        let driver_options = validate_command_line(parse_command_line(arg_vec).unwrap()).unwrap();
+        assert_that!(driver_options.target_platform, equal_to(TargetPlatform::EPOC16));
+    }
+
+    #[test]
+    fn architecture_x865_64() {
+        let (c_file, _temp_dir) = create_file();
+
+        let arg_vec = vec!["rcc", c_file.to_str().unwrap(), "-a", "X86_64"];
+        let driver_options = validate_command_line(parse_command_line(arg_vec).unwrap()).unwrap();
+        assert_that!(driver_options.target_platform, equal_to(TargetPlatform::X86_64));
     }
 
     fn create_file() -> (std::path::PathBuf, TempDir) {
