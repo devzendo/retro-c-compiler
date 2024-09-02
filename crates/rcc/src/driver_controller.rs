@@ -1,4 +1,4 @@
-use log::debug;
+use log::{debug, info};
 /// The DriverController is responsible for running the various stages of the compilation.
 /// It orchestrates the various executions using a Driver to run the actual external tools.
 /// It is the high level of the driver - for the low level, see Driver.
@@ -25,7 +25,7 @@ impl DefaultDriverController {
 impl DriverController for DefaultDriverController {
     fn drive(
         &self,
-        _driver_options: DriverOptions,
+        driver_options: DriverOptions,
         driver: Box<dyn Driver>,
     ) -> Result<ExitCode, anyhow::Error> {
         
@@ -48,6 +48,12 @@ impl DriverController for DefaultDriverController {
                 anyhow::bail!(format!("Could not run compiler: {}", err));
             }
         }
+        
+        if driver_options.stop_after_compilation {
+            info!("Stopping after compilation");
+            return Ok(ExitCode::Ok);
+        } 
+            
 
         // Assemble...
         match driver.assemble() {

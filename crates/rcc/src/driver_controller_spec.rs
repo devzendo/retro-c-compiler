@@ -91,4 +91,22 @@ mod driver_controller_spec {
         let msg = res.err().unwrap().to_string();
         assert_eq!(msg, "Could not run assembler: Assembler failed");
     }
+
+    #[test]
+    fn only_compiles_with_stop_option() {
+        let mut mock_driver = MockDriver::new();
+        let expected_preprocessor_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
+        mock_driver.expect_preprocess().times(1).return_once(move || expected_preprocessor_return);
+        let expected_compiler_return: Result<Execution, anyhow::Error> = Ok(Execution { exit_code: Some(0), stdout: None, stderr: None });
+        mock_driver.expect_compile().times(1).return_once(move || expected_compiler_return);
+        mock_driver.expect_assemble().never();
+        let mut driver_options = driver_options();
+        driver_options.stop_after_compilation = true; // Critical!
+
+        let sut = DefaultDriverController::new();
+        let res = sut.drive(driver_options, Box::new(mock_driver));
+
+        let exit_code = res.ok().unwrap();
+        assert_eq!(exit_code, ExitCode::Ok);
+    }
 }
