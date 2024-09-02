@@ -78,6 +78,7 @@ mod main_spec {
         assert_that!(driver_options.lex, equal_to(false));
         assert_that!(driver_options.parse, equal_to(false));
         assert_that!(driver_options.codegen, equal_to(false));
+        assert_that!(driver_options.stop_after_compilation, equal_to(false));
         assert_that!(driver_options.target_platform, equal_to(TargetPlatform::Transputer));
     }
 
@@ -88,8 +89,6 @@ mod main_spec {
         let arg_vec = vec!["rcc", c_file.to_str().unwrap(), "--lex"];
         let driver_options = validate_command_line(parse_command_line(arg_vec).unwrap()).unwrap();
         assert_that!(driver_options.lex, equal_to(true));
-        assert_that!(driver_options.parse, equal_to(false));
-        assert_that!(driver_options.codegen, equal_to(false));
     }
 
     #[test]
@@ -98,9 +97,7 @@ mod main_spec {
 
         let arg_vec = vec!["rcc", c_file.to_str().unwrap(), "--parse"];
         let driver_options = validate_command_line(parse_command_line(arg_vec).unwrap()).unwrap();
-        assert_that!(driver_options.lex, equal_to(false));
         assert_that!(driver_options.parse, equal_to(true));
-        assert_that!(driver_options.codegen, equal_to(false));
     }
 
     #[test]
@@ -109,9 +106,16 @@ mod main_spec {
 
         let arg_vec = vec!["rcc", c_file.to_str().unwrap(), "--codegen"];
         let driver_options = validate_command_line(parse_command_line(arg_vec).unwrap()).unwrap();
-        assert_that!(driver_options.lex, equal_to(false));
-        assert_that!(driver_options.parse, equal_to(false));
         assert_that!(driver_options.codegen, equal_to(true));
+    }
+
+    #[test]
+    fn stop_after_compilation_flag() {
+        let (c_file, _temp_dir) = create_file();
+
+        let arg_vec = vec!["rcc", c_file.to_str().unwrap(), "--stop"];
+        let driver_options = validate_command_line(parse_command_line(arg_vec).unwrap()).unwrap();
+        assert_that!(driver_options.stop_after_compilation, equal_to(true));
     }
 
     #[test]

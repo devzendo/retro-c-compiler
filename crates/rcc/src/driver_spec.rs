@@ -41,6 +41,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            stop_after_compilation: false,
             target_platform: TargetPlatform::Transputer,
         };
 
@@ -83,6 +84,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            stop_after_compilation: false,
             target_platform: TargetPlatform::Transputer,
         };
 
@@ -124,6 +126,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            stop_after_compilation: false,
             target_platform: TargetPlatform::Transputer,
         };
 
@@ -174,6 +177,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            stop_after_compilation: false,
             target_platform: TargetPlatform::Transputer,
         };
 
@@ -225,6 +229,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: true,
+            stop_after_compilation: false,
             target_platform: TargetPlatform::Transputer,
         };
 
@@ -281,6 +286,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            stop_after_compilation: false,
             target_platform: TargetPlatform::Transputer,
         };
 
@@ -334,6 +340,7 @@ mod driver_spec {
             parse: false,
             codegen: false,
             save_temps: true,
+            stop_after_compilation: false,
             target_platform: TargetPlatform::Transputer,
         };
 

@@ -24,6 +24,7 @@ mod driver_controller_spec {
             parse: false,
             codegen: false,
             save_temps: false,
+            stop_after_compilation: false,
             target_platform: TargetPlatform::Transputer,
         }
     }

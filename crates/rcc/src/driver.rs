@@ -23,6 +23,7 @@ pub struct DriverOptions {
     pub parse: bool,
     pub codegen: bool,
     pub save_temps: bool,
+    pub stop_after_compilation: bool,
     pub target_platform: TargetPlatform,
 }
 

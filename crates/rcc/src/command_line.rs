@@ -70,50 +70,57 @@ where
     T: Into<OsString> + Clone,
 {
     Command::new("rcc")
-      .version(VERSION)
-      .author("DevZendo.org")
-      .about("Transputer & EPOC16 C Compiler")
-      .arg(
-        Arg::new("file")
-          .help("The path (absolute or relative) of a C file to compile")
-          .required(true) // nice, but causes termination with a less-than-perfect error, and we want to test for its absence
-      )
-      .arg(
-        Arg::new("lex")
-          .short('l')
-          .long("lex")
-          .help("Run the lexer but stop before parsing")
-          .action(ArgAction::SetTrue)
-      )
-      .arg(
-        Arg::new("parse")
-          .short('p')
-          .long("parse")
-          .help("Run the lexer and parser, but stop before assembly generation")
-          .action(ArgAction::SetTrue),
-      )
-      .arg(
-        Arg::new("codegen")
-          .short('c')
-          .long("codegen")
-          .help("Run the lexer, parser, and assembly generation, but stop before code generation")
-          .action(ArgAction::SetTrue),
-      )
-      .arg(
-        Arg::new("save-temps")
-          .short('s')
-          .long("save-temps")
-          .help("Do not delete temporary preprocessor and assembly files")
-          .action(ArgAction::SetTrue)
-      )
-      .arg(
-        Arg::new("arch")
-          .short('a')
-          .long("architecture")
-          .help("Choose the target archtecture")
-          .value_parser(value_parser!(TargetPlatform)),
-      )
-       .try_get_matches_from(itr)
+        .version(VERSION)
+        .author("DevZendo.org")
+        .about("Transputer & EPOC16 C Compiler")
+        .arg(
+            Arg::new("file")
+                .help("The path (absolute or relative) of a C file to compile")
+                .required(true) // nice, but causes termination with a less-than-perfect error, and we want to test for its absence
+        )
+        .arg(
+            Arg::new("lex")
+                .short('l')
+                .long("lex")
+                .help("Run the lexer but stop before parsing")
+                .action(ArgAction::SetTrue)
+        )
+        .arg(
+            Arg::new("parse")
+                .short('p')
+                .long("parse")
+                .help("Run the lexer and parser, but stop before assembly generation")
+                .action(ArgAction::SetTrue),
+        )
+        .arg(
+            Arg::new("codegen")
+                .short('c')
+                .long("codegen")
+                .help("Run the lexer, parser, and assembly generation, but stop before code generation")
+                .action(ArgAction::SetTrue),
+        )
+        .arg(
+            Arg::new("save-temps")
+                .short('s')
+                .long("save-temps")
+                .help("Do not delete temporary preprocessor and assembly files")
+                .action(ArgAction::SetTrue)
+        )
+        .arg(
+            Arg::new("stop-after-compilation")
+                .short('S')
+                .long("stop")
+                .help("Stop after compilation; do not assemble")
+                .action(ArgAction::SetTrue)
+        )
+        .arg(
+            Arg::new("arch")
+                .short('a')
+                .long("architecture")
+                .help("Choose the target archtecture")
+                .value_parser(value_parser!(TargetPlatform)),
+        )
+        .try_get_matches_from(itr)
 }
 
 pub fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOptions> {
@@ -131,6 +138,7 @@ pub fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOpti
                     parse: arguments.get_flag("parse"),
                     codegen: arguments.get_flag("codegen"),
                     save_temps: arguments.get_flag("save-temps"),
+                    stop_after_compilation: arguments.get_flag("stop-after-compilation"),
                     target_platform: *arguments
                         .get_one::<TargetPlatform>("arch")
                         .unwrap_or(&TargetPlatform::Transputer),
