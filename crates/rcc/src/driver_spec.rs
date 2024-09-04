@@ -46,7 +46,11 @@ mod driver_spec {
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
-        match sut.preprocess() {
+        execution_ok(sut.preprocess());
+    }
+
+    fn execution_ok(result: Result<Execution, anyhow::Error>) {
+        match result {
             Ok(success) => {
 
                 assert_eq!(success.exit_code.unwrap(), 0i32);
@@ -89,17 +93,92 @@ mod driver_spec {
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
-        match sut.compile() {
-            Ok(success) => {
+        execution_ok(sut.compile());
+    }
 
-                assert_eq!(success.exit_code.unwrap(), 0i32);
-                assert_that!(success.stdout, none());
-                assert_that!(success.stderr, none());
-            }
-            Err(err) => {
-                panic!("was not expecting an error: {}", err);
-            }
-        }
+    #[test]
+    fn flags_passed_to_compiler() {
+        // TODO will need revisiting when we have a compiler!
+        let driver_options = DriverOptions {
+            c_file: Box::new(PathBuf::from("file.c")),
+            lex: true,
+            parse: true,
+            codegen: true,
+            save_temps: false,              // These two aren't passed through
+            stop_after_compilation: false,  // These two aren't passed through
+            target_platform: TargetPlatform::Transputer,
+        };
+        let expected_args = vec!["rcc1", "--lex", "--parse", "--codegen", "file.i", "-o", "file.asm"];
+        check_compiler_flags(driver_options, &expected_args);
+    }
+
+    fn check_compiler_flags(driver_options: DriverOptions, expected_args: &Vec<&str>) {
+        let mut mock_executor = MockExecutor::new();
+        let expected_executor_args: Vec<String> = expected_args
+            .iter()
+            .map(|str| str.to_string())
+            .collect();
+        let expected_executor_return = Ok(Execution {
+            exit_code: Some(0i32),
+            stdout: None,
+            stderr: None,
+        });
+        mock_executor
+            .expect_run()
+            .times(1)
+            .with(predicate::eq(expected_executor_args))
+            .return_once(move |_| expected_executor_return);
+
+        let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
+        execution_ok(sut.compile());
+    }
+
+    #[test]
+    fn x86_64_architecture_passed_to_compiler() {
+        // TODO will need revisiting when we have a compiler!
+        let expected_args = vec!["rcc1", "--architecture", "X86_64", "file.i", "-o", "file.asm"];
+        let driver_options = DriverOptions {
+            c_file: Box::new(PathBuf::from("file.c")),
+            lex: false,
+            parse: false,
+            codegen: false,
+            save_temps: false,
+            stop_after_compilation: false,
+            target_platform: TargetPlatform::X86_64,
+        };
+        check_compiler_flags(driver_options, &expected_args);
+    }
+
+    #[test]
+    fn epoc16_architecture_passed_to_compiler() {
+        // TODO will need revisiting when we have a compiler!
+        let expected_args = vec!["rcc1", "--architecture", "EPOC16", "file.i", "-o", "file.asm"];
+        let driver_options = DriverOptions {
+            c_file: Box::new(PathBuf::from("file.c")),
+            lex: false,
+            parse: false,
+            codegen: false,
+            save_temps: false,
+            stop_after_compilation: false,
+            target_platform: TargetPlatform::EPOC16,
+        };
+        check_compiler_flags(driver_options, &expected_args);
+    }
+
+    #[test]
+    fn transputer_architecture_is_default_and_not_passed_to_compiler() {
+        // TODO will need revisiting when we have a compiler!
+        let expected_args = vec!["rcc1", "file.i", "-o", "file.asm"];
+        let driver_options = DriverOptions {
+            c_file: Box::new(PathBuf::from("file.c")),
+            lex: false,
+            parse: false,
+            codegen: false,
+            save_temps: false,
+            stop_after_compilation: false,
+            target_platform: TargetPlatform::Transputer,
+        };
+        check_compiler_flags(driver_options, &expected_args);
     }
 
     #[test]
@@ -131,17 +210,7 @@ mod driver_spec {
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
-        match sut.assemble() {
-            Ok(success) => {
-
-                assert_eq!(success.exit_code.unwrap(), 0i32);
-                assert_that!(success.stdout, none());
-                assert_that!(success.stderr, none());
-            }
-            Err(err) => {
-                panic!("was not expecting an error: {}", err);
-            }
-        }
+        execution_ok(sut.assemble());
     }
 
     #[test]
@@ -182,18 +251,8 @@ mod driver_spec {
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
-        match sut.compile() {
-            Ok(success) => {
-
-                assert_eq!(success.exit_code.unwrap(), 0i32);
-                assert_that!(success.stdout, none());
-                assert_that!(success.stderr, none());
-                assert!(!i_file.exists(), "temp preprocessor file was not deleted by driver");
-            }
-            Err(err) => {
-                panic!("was not expecting an error: {}", err);
-            }
-        }
+        execution_ok(sut.compile());
+        assert!(!i_file.exists(), "temp preprocessor file was not deleted by driver");
     }
 
     #[test]
@@ -234,18 +293,8 @@ mod driver_spec {
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
-        match sut.compile() {
-            Ok(success) => {
-
-                assert_eq!(success.exit_code.unwrap(), 0i32);
-                assert_that!(success.stdout, none());
-                assert_that!(success.stderr, none());
-                assert!(i_file.exists(), "temp preprocessor file was deleted by driver");
-            }
-            Err(err) => {
-                panic!("was not expecting an error: {}", err);
-            }
-        }
+        execution_ok(sut.compile());
+        assert!(i_file.exists(), "temp preprocessor file was deleted by driver");
     }
 
 
@@ -291,18 +340,8 @@ mod driver_spec {
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
-        match sut.assemble() {
-            Ok(success) => {
-
-                assert_eq!(success.exit_code.unwrap(), 0i32);
-                assert_that!(success.stdout, none());
-                assert_that!(success.stderr, none());
-                assert!(!asm_file.exists(), "temp assembly file was not deleted by driver");
-            }
-            Err(err) => {
-                panic!("was not expecting an error: {}", err);
-            }
-        }
+        execution_ok(sut.assemble());
+        assert!(!asm_file.exists(), "temp assembly file was not deleted by driver");
     }
 
     #[test]
@@ -345,18 +384,8 @@ mod driver_spec {
         };
 
         let sut = DefaultDriver::new(driver_options, Box::new(mock_executor));
-        match sut.assemble() {
-            Ok(success) => {
-
-                assert_eq!(success.exit_code.unwrap(), 0i32);
-                assert_that!(success.stdout, none());
-                assert_that!(success.stderr, none());
-                assert!(asm_file.exists(), "temp assembly file was deleted by driver but save-temps given");
-            }
-            Err(err) => {
-                panic!("was not expecting an error: {}", err);
-            }
-        }
+        execution_ok(sut.assemble());
+        assert!(asm_file.exists(), "temp assembly file was deleted by driver but save-temps given");
     }
 }
 

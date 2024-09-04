@@ -75,9 +75,25 @@ impl Driver for DefaultDriver {
         }
         let assembly = &xlat.assembler();
         let assembly_file = assembly.as_os_str().to_string_lossy();
-        let args: Vec<String> = vec!["rcc1", &preprocessor_file, "-o", &assembly_file].iter().map(|str| str.to_string()).collect();
+        let mut args: Vec<String> = vec!["rcc1".to_string()];
+        if self.driver_options.lex {
+            args.push("--lex".to_string())
+        }
+        if self.driver_options.parse {
+            args.push("--parse".to_string())
+        }
+        if self.driver_options.codegen {
+            args.push("--codegen".to_string())
+        }
+        if self.driver_options.target_platform != TargetPlatform::Transputer {
+            args.push("--architecture".to_string());
+            let name = self.driver_options.target_platform.to_string();
+            args.push(name);
+        }
+        let mut rest: Vec<String> = vec![preprocessor_file.to_string(), "-o".to_string(), assembly_file.to_string()];
+        args.append(&mut rest);
 
-        let result = self.executor.run(args);
+        let result = self.executor.run(args.iter().map(|str| str.to_string()).collect());
         // tidy up after the preprocessor unless requested
         if self.driver_options.save_temps {
             debug!("Retaining temporary preprocessor file {}", preprocessor_file);
