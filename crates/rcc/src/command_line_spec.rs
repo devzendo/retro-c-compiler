@@ -1,7 +1,7 @@
 extern crate hamcrest2;
 
 #[cfg(test)]
-mod main_spec {
+mod command_line_spec {
 
     use std::fs::File;
 
@@ -128,7 +128,7 @@ mod main_spec {
     }
 
     #[test]
-    fn architecture_x865_64() {
+    fn architecture_x86_64() {
         let (c_file, _temp_dir) = create_file();
 
         let arg_vec = vec!["rcc", c_file.to_str().unwrap(), "-a", "X86_64"];
