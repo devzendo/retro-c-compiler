@@ -20,8 +20,7 @@ docs/*.toc
 docs/*.tpbuild
 *.out
 *.rtf#
-keying.csv
-
+*.i
 
 # Added by cargo
 #

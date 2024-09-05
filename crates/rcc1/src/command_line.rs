@@ -73,10 +73,10 @@ where
     Command::new("rcc1")
         .version(VERSION)
         .author("DevZendo.org")
-        .about("Transputer & EPOC16 C Compiler")
+        .about("Transputer & EPOC16 C Compiler (Back End)")
         .arg(
             Arg::new("file")
-                .help("The path (absolute or relative) of a C file to compile")
+                .help("The path (absolute or relative) of a prepropressed C file to compile (.i)")
                 .required(true) // nice, but causes termination with a less-than-perfect error, and we want to test for its absence
         )
         .arg(
@@ -114,7 +114,7 @@ pub fn validate_command_line(arguments: ArgMatches) -> Result<compiler::Compiler
     let file = arguments.get_one::<String>("file");
     match file {
         Some(file) => {
-            if file.to_lowercase().ends_with(".c") {
+            if file.to_lowercase().ends_with(".i") {
                 let file_path = Path::new(file);
                 if !file_path.exists() {
                     bail!(format!("'{}' could not be found", file));
@@ -129,10 +129,10 @@ pub fn validate_command_line(arguments: ArgMatches) -> Result<compiler::Compiler
                         .unwrap_or(&TargetPlatform::Transputer),
                 })
             } else {
-                bail!(format!("'{}' is not a C filename", file))
+                bail!(format!("'{}' is not a preprocessed C filename (.i)", file))
             }
         }
-        None => bail!("C filename not supplied"),
+        None => bail!("preprocessed C filename (.i) not supplied"),
     }
 }
 
