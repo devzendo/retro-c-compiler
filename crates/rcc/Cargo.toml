@@ -8,12 +8,14 @@ edition.workspace = true
 [dependencies]
 anyhow = "1.0.86"
 clap = { version = "4.5.16", features = ["derive"] }
+common = { path = "../common/" }
 env_logger = "0.10"
 log = "0.4"
 mockall = "0.11.4"
 sysexits = "0.8.1"
 
 [dev-dependencies]
+common_test = { path = "../common_test/" }
 ctor = "0.2.6"
 hamcrest2 = "0.3"
 serial_test = "3.0.0"

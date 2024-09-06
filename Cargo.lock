@@ -131,6 +131,32 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3fd119d74b830634cea2a0f58bbd0d54540518a14397557951e79340abc28c0"
 
 [[package]]
+name = "common"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "ctor",
+ "hamcrest2",
+ "log",
+ "mockall",
+ "temp_testdir",
+ "tempfile",
+]
+
+[[package]]
+name = "common_test"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "ctor",
+ "hamcrest2",
+ "log",
+ "mockall",
+ "temp_testdir",
+ "tempfile",
+]
+
+[[package]]
 name = "ctor"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -577,6 +603,8 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
+ "common",
+ "common_test",
  "ctor",
  "env_logger",
  "hamcrest2",
@@ -595,6 +623,8 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
+ "common",
+ "common_test",
  "ctor",
  "env_logger",
  "hamcrest2",
