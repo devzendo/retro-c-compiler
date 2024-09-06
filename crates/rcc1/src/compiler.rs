@@ -1,12 +1,6 @@
 use std::path::PathBuf;
 
-#[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
-pub enum TargetPlatform {
-    #[default]
-    Transputer,
-    EPOC16,
-    X86_64,
-}
+use common::target_platform::TargetPlatform;
 
 #[derive(Debug, Clone)]
 pub struct CompilerOptions {

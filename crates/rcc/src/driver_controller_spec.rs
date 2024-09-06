@@ -4,10 +4,11 @@ extern crate hamcrest2;
 mod driver_controller_spec {
 
     use anyhow::bail;
+    use common::target_platform::TargetPlatform;
     use sysexits::ExitCode;
     use std::path::PathBuf;
 
-    use crate::driver::{DriverOptions, MockDriver, TargetPlatform};
+    use crate::driver::{DriverOptions, MockDriver};
     use crate::driver_controller::{DefaultDriverController, DriverController};
     use crate::executor::Execution;
 

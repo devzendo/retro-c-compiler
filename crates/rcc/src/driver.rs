@@ -4,17 +4,10 @@
 use std::path::PathBuf;
 use crate::{executor::{Execution, Executor}, suffix_translator::SuffixTranslator};
 
+use common::target_platform::TargetPlatform;
 use log::{debug, warn};
 #[cfg(test)]
 use mockall::automock;
-
-#[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
-pub enum TargetPlatform {
-    #[default]
-    Transputer,
-    EPOC16,
-    X86_64,
-}
 
 #[derive(Debug, Clone)]
 pub struct DriverOptions {

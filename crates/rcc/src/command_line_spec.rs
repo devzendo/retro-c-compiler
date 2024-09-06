@@ -5,11 +5,11 @@ mod command_line_spec {
 
     use std::fs::File;
 
+    use common::target_platform::TargetPlatform;
     use hamcrest2::prelude::*;
     use temp_testdir::TempDir;
 
     use crate::command_line::{parse_command_line, validate_command_line};
-    use crate::driver::TargetPlatform;
 
     use super::file_utils_test_helper::temp_config_dir;
 
