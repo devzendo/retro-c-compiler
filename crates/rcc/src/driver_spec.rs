@@ -3,6 +3,7 @@ extern crate hamcrest2;
 #[cfg(test)]
 mod driver_spec {
 
+    use common_test::file_utils_test_helper::temp_config_dir;
     use hamcrest2::prelude::*;
     use mockall::*;
     use std::fs::File;
@@ -10,7 +11,6 @@ mod driver_spec {
 
     use crate::driver::{DefaultDriver, Driver, DriverOptions, TargetPlatform};
     use crate::executor::{Execution, MockExecutor};
-    use crate::file_utils_test_helper::temp_config_dir;
 
     #[ctor::ctor]
     fn before_each() {
@@ -388,7 +388,3 @@ mod driver_spec {
         assert!(asm_file.exists(), "temp assembly file was deleted by driver but save-temps given");
     }
 }
-
-#[cfg(test)]
-#[path = "./file_utils_test_helper.rs"]
-pub mod file_utils_test_helper;
