@@ -1,16 +1,21 @@
 # retro-c-compiler
 
 ## What is this?
-A C compiler, targetting the Transputer for the Parachute project, and EPOC16 (the
-OS of the Psion Series 3 PDAs). Built in Rust with TDD, and following the book
-["Writing a C Compiler" by Nora Sandler]
+A C compiler, targetting the Transputer for the Parachute project, EPOC16 (the
+OS of the Psion Series 3 PDAs), and x86_64 (for testing).
+
+Built in Rust with TDD, and following the book ["Writing a C Compiler" by Nora Sandler]
 (https://nostarch.com/writing-c-compiler).
 
-## Project Status
-Started May 2024, there's currently just the overall project structure and a
-couple of "Hello World" programs.
+It is part of the [Parachute Project](https://devzendo.github.io/parachute).
 
-On Chapter 1, writing the compiler driver.
+## Project Status
+Actively in development.
+
+Started May 2024, there's currently the compiler driver, and the start of the actual
+compiler. 
+
+On Chapter 1, writing the compiler's lexer.
 
 # Overview
 The intention is to build a C compiler using the progressive approach from
@@ -54,8 +59,10 @@ under the 'crates' directory: See [https://matklad.github.io/2021/08/22/large-ru
 
 * rcc is the main compiler driver, the program you use to do compilation. It
   calls the preprocessor, assembler etc.
-* rcc1 is the C compiler proper. It transates preprocessed C into the
+* rcc1 is the C compiler proper. It translates preprocessed C into the
   appropriate assembler.
+* common is code that's common to the other crates.
+* test_common is code for use in tests, that's common to the other crates.
 
 ## Building
 You will need Rust, at least version 1.74.0. Only the stable version is used.
@@ -70,6 +77,8 @@ This will give you two executables: `target/release/rcc` and `target/release/rcc
 At some point, the executables will be packaged into the relevant package formats for the
 various OSs: .deb, whatever HaikuOS uses, .msi, .pkg.. or perhaps just a .zip that you
 extract somewhere and add to the PATH.
+
+The executables will also be shipped as part of the overall Parachute project.
 
 # Documentation
 When there is some, it'll be in the 'docs' directory.
