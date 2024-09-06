@@ -223,7 +223,7 @@ mod driver_spec {
         let asm_file = temp.join("file.asm");
         let asm_file_absolute = asm_file.as_os_str().to_str().unwrap();
 
-        // Pretend to run the compiler..
+        // Pretend to run the compiler.
         let mut mock_executor = MockExecutor::new();
         let expected_executor_args: Vec<String> = vec!["rcc1", i_file_absolute, "-o", asm_file_absolute]
             .iter()
@@ -265,7 +265,7 @@ mod driver_spec {
         let asm_file = temp.join("file.asm");
         let asm_file_absolute = asm_file.as_os_str().to_str().unwrap();
 
-        // Pretend to run the compiler..
+        // Pretend to run the compiler.
         let mut mock_executor = MockExecutor::new();
         let expected_executor_args: Vec<String> = vec!["rcc1", i_file_absolute, "-o", asm_file_absolute]
             .iter()
@@ -312,7 +312,7 @@ mod driver_spec {
         let lst_file = temp.join("file.lst");
         let lst_file_absolute = lst_file.as_os_str().to_str().unwrap();
 
-        // Pretend to run the assembler..
+        // Pretend to run the assembler.
         let mut mock_executor = MockExecutor::new();
         let expected_executor_args: Vec<String> = vec!["tmasm", asm_file_absolute, "-o", bin_file_absolute, "-l", lst_file_absolute]
             .iter()
@@ -356,7 +356,7 @@ mod driver_spec {
         let lst_file = temp.join("file.lst");
         let lst_file_absolute = lst_file.as_os_str().to_str().unwrap();
 
-        // Pretend to run the assembler..
+        // Pretend to run the assembler.
         let mut mock_executor = MockExecutor::new();
         let expected_executor_args: Vec<String> = vec!["tmasm", asm_file_absolute, "-o", bin_file_absolute, "-l", lst_file_absolute]
             .iter()

@@ -50,7 +50,7 @@ impl Driver for DefaultDriver {
         let preprocessor = &xlat.preprocessor();
         let preprocessor_file = preprocessor.as_os_str().to_string_lossy();
         let c_file = self.driver_options.c_file.as_os_str().to_string_lossy();
-        let args: Vec<String> = vec!["gcc", "-E", "-P", &c_file, "-o", &preprocessor_file].iter().map(|str| str.to_string()).collect();
+        let args: Vec<String> = ["gcc", "-E", "-P", &c_file, "-o", &preprocessor_file].iter().map(|str| str.to_string()).collect();
 
         self.executor.run(args)
     }
@@ -108,7 +108,7 @@ impl Driver for DefaultDriver {
         let binary_file = binary.as_os_str().to_string_lossy();
         let listing = &xlat.listing();
         let listing_file = listing.as_os_str().to_string_lossy();
-        let args: Vec<String> = vec!["tmasm", &assembly_file, "-o", &binary_file, "-l", &listing_file].iter().map(|str| str.to_string()).collect();
+        let args: Vec<String> = ["tmasm", &assembly_file, "-o", &binary_file, "-l", &listing_file].iter().map(|str| str.to_string()).collect();
     
         let result = self.executor.run(args);
         // tidy up after the assembler unless requested

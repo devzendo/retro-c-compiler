@@ -167,7 +167,7 @@ mod command_line_spec {
         assert_that!(compiler_options.target_platform, equal_to(TargetPlatform::X86_64));
     }
 
-    fn create_file() -> (std::path::PathBuf, TempDir) {
+    fn create_file() -> (PathBuf, TempDir) {
         let (temp, temp_dir) = temp_config_dir();
         let i_file = temp.join("HELLOWORLD.I");
         File::create(i_file.clone()).unwrap();

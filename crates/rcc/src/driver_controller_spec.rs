@@ -41,7 +41,7 @@ mod driver_controller_spec {
         mock_driver.expect_assemble().times(1).return_once(move || expected_assembler_return);
         let driver_options = driver_options();
 
-        let sut = DefaultDriverController::new();
+        let sut = DefaultDriverController::default();
         let res = sut.drive(driver_options, Box::new(mock_driver));
 
         let exit_code = res.ok().unwrap();
@@ -54,7 +54,7 @@ mod driver_controller_spec {
         mock_driver.expect_preprocess().return_once(move || bail!("Preprocessor failed"));
         let driver_options = driver_options();
 
-        let sut = DefaultDriverController::new();
+        let sut = DefaultDriverController::default();
         let res = sut.drive(driver_options, Box::new(mock_driver));
 
         let msg = res.err().unwrap().to_string();
@@ -69,7 +69,7 @@ mod driver_controller_spec {
         mock_driver.expect_compile().return_once(move || bail!("Compiler failed"));
         let driver_options = driver_options();
 
-        let sut = DefaultDriverController::new();
+        let sut = DefaultDriverController::default();
         let res = sut.drive(driver_options, Box::new(mock_driver));
 
         let msg = res.err().unwrap().to_string();
@@ -86,7 +86,7 @@ mod driver_controller_spec {
         mock_driver.expect_assemble().return_once(move || bail!("Assembler failed"));
         let driver_options = driver_options();
 
-        let sut = DefaultDriverController::new();
+        let sut = DefaultDriverController::default();
         let res = sut.drive(driver_options, Box::new(mock_driver));
 
         let msg = res.err().unwrap().to_string();
@@ -104,7 +104,7 @@ mod driver_controller_spec {
         let mut driver_options = driver_options();
         driver_options.stop_after_compilation = true; // Critical!
 
-        let sut = DefaultDriverController::new();
+        let sut = DefaultDriverController::default();
         let res = sut.drive(driver_options, Box::new(mock_driver));
 
         let exit_code = res.ok().unwrap();

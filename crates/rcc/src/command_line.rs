@@ -4,7 +4,7 @@ use anyhow::{bail, Result};
 use clap::{value_parser, Arg, ArgAction, ArgMatches, Command};
 use common::target_platform::TargetPlatform;
 
-use crate::driver::{self, DriverOptions};
+use crate::driver::DriverOptions;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -61,13 +61,13 @@ where
             Arg::new("arch")
                 .short('a')
                 .long("architecture")
-                .help("Choose the target archtecture")
+                .help("Choose the target architecture")
                 .value_parser(value_parser!(TargetPlatform)),
         )
         .try_get_matches_from(itr)
 }
 
-pub fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOptions> {
+pub fn validate_command_line(arguments: ArgMatches) -> Result<DriverOptions> {
     let file = arguments.get_one::<String>("file");
     match file {
         Some(file) => {
@@ -95,7 +95,7 @@ pub fn validate_command_line(arguments: ArgMatches) -> Result<driver::DriverOpti
     }
 }
 
-pub fn parse_and_validate<I, T>(itr: I) -> Result<driver::DriverOptions>
+pub fn parse_and_validate<I, T>(itr: I) -> Result<DriverOptions>
 where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,

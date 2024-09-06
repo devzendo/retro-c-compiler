@@ -12,7 +12,7 @@ fn main() -> ExitCode {
     }
     env_logger::init();
 
-    let _compiler_options = match parse_and_validate(&mut env::args_os()) {
+    let _compiler_options = match parse_and_validate(env::args_os()) {
         Ok(compiler_options) => {
             debug!("compiler options: {:?}", compiler_options);
             compiler_options
@@ -25,5 +25,5 @@ fn main() -> ExitCode {
     };
 
     info!("Not much to C here yet..");
-    return ExitCode::Ok;
+    ExitCode::Ok
 }

@@ -17,18 +17,6 @@ impl ValueEnum for TargetPlatform {
         ]
     }
 
-    fn to_possible_value(&self) -> Option<PossibleValue> {
-        Some(match self {
-            TargetPlatform::Transputer => {
-                PossibleValue::new("Transputer").help("Parachute Transputer emulator")
-            }
-            TargetPlatform::EPOC16 => {
-                PossibleValue::new("EPOC16").help("Psion EPOC16 (v20) architecture")
-            }
-            TargetPlatform::X86_64 => PossibleValue::new("X86_64").help("x86_64 architecture"),
-        })
-    }
-
     fn from_str(input: &str, ignore_case: bool) -> Result<Self, String> {
         Self::value_variants()
             .iter()
@@ -39,6 +27,18 @@ impl ValueEnum for TargetPlatform {
             })
             .cloned()
             .ok_or_else(|| std::format!("Invalid variant: {}", input))
+    }
+
+    fn to_possible_value(&self) -> Option<PossibleValue> {
+        Some(match self {
+            TargetPlatform::Transputer => {
+                PossibleValue::new("Transputer").help("Parachute Transputer emulator")
+            }
+            TargetPlatform::EPOC16 => {
+                PossibleValue::new("EPOC16").help("Psion EPOC16 (v20) architecture")
+            }
+            TargetPlatform::X86_64 => PossibleValue::new("X86_64").help("x86_64 architecture"),
+        })
     }
 }
 

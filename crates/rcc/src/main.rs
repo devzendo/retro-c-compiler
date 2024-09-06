@@ -17,7 +17,7 @@ fn main() -> ExitCode {
     }
     env_logger::init();
 
-    let driver_options = match parse_and_validate(&mut env::args_os()) {
+    let driver_options = match parse_and_validate(env::args_os()) {
         Ok(driver_options) => {
             debug!("driver options: {:?}", driver_options);
             driver_options
@@ -31,15 +31,15 @@ fn main() -> ExitCode {
 
     let command_executor = CommandExecutor::default();
     let driver = DefaultDriver::new(driver_options.clone(), Box::new(command_executor));
-    let driver_controller = DefaultDriverController::new();
+    let driver_controller = DefaultDriverController::default();
     match driver_controller.drive(driver_options, Box::new(driver)) {
         Ok(code) => {
             debug!("Exiting with code {code}");
-            return code;
+            code
         }
         Err(err) => {
             error!("Exiting with error {err}");
-            return ExitCode::Unavailable;
+            ExitCode::Unavailable
         }
     }
 }

@@ -4,7 +4,7 @@ use anyhow::{bail, Result};
 use clap::{value_parser, Arg, ArgAction, ArgMatches, Command};
 use common::target_platform::TargetPlatform;
 
-use crate::compiler::{self, CompilerOptions};
+use crate::compiler::CompilerOptions;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -19,7 +19,7 @@ where
         .about("Transputer & EPOC16 C Compiler (Back End)")
         .arg(
             Arg::new("file")
-                .help("The path (absolute or relative) of a prepropressed C file to compile (.i)")
+                .help("The path (absolute or relative) of a preprocessed C file to compile (.i)")
                 .required(true) // nice, but causes termination with a less-than-perfect error, and we want to test for its absence
         )
         .arg(
@@ -47,7 +47,7 @@ where
             Arg::new("arch")
                 .short('a')
                 .long("architecture")
-                .help("Choose the target archtecture")
+                .help("Choose the target archtiecture")
                 .value_parser(value_parser!(TargetPlatform)),
         )
         .arg(
@@ -60,7 +60,7 @@ where
         .try_get_matches_from(itr)
 }
 
-pub fn validate_command_line(arguments: ArgMatches) -> Result<compiler::CompilerOptions> {
+pub fn validate_command_line(arguments: ArgMatches) -> Result<CompilerOptions> {
     match arguments.get_one::<String>("file") {
         Some(file) => {
             if file.to_lowercase().ends_with(".i") {
@@ -97,7 +97,7 @@ pub fn validate_command_line(arguments: ArgMatches) -> Result<compiler::Compiler
     }
 }
 
-pub fn parse_and_validate<I, T>(itr: I) -> Result<compiler::CompilerOptions>
+pub fn parse_and_validate<I, T>(itr: I) -> Result<CompilerOptions>
 where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,

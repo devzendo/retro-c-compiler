@@ -53,7 +53,7 @@ impl Executor for CommandExecutor {
         // I could just capture the Output, rather than encapsulating it in the fields of the Execution,
         // however, Execution is our abstraction, can be constructed; Output, perhaps not so easy? And
         // mocking the Executor, and trying to create an arbitrary ExitStatus proved impossible. So,
-        // the Execution abstraction is specifically easy to test with, encapuslating hard-to-create internals.
+        // the Execution abstraction is specifically easy to test with, encapsulating hard-to-create internals.
         match output {
             Ok(output) => {
                 let stdout = Some(String::from_utf8_lossy(&output.stdout).to_string());
@@ -68,7 +68,7 @@ impl Executor for CommandExecutor {
                     error!("stdout: {}", stdout.as_ref().unwrap());
                     error!("stderr: {}", stderr.as_ref().unwrap());
                 }
-                Ok(Execution { exit_code: output.status.code(), stdout: stdout, stderr: stderr })
+                Ok(Execution { exit_code: output.status.code(), stdout, stderr })
             }
             Err(err) => bail!("Could not run command '{}': {}", args_split.0, err),
         }

@@ -14,12 +14,10 @@ pub trait DriverController {
     ) -> Result<ExitCode, anyhow::Error>;
 }
 
+#[derive(Default)]
 pub struct DefaultDriverController {}
 
 impl DefaultDriverController {
-    pub fn new() -> Self {
-        Self {}
-    }
 }
 
 impl DriverController for DefaultDriverController {
@@ -65,7 +63,7 @@ impl DriverController for DefaultDriverController {
             }
         }
 
-        return Ok(ExitCode::Ok);
+        Ok(ExitCode::Ok)
     }
 }
 
