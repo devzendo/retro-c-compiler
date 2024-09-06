@@ -50,20 +50,38 @@ where
                 .help("Choose the target archtecture")
                 .value_parser(value_parser!(TargetPlatform)),
         )
+        .arg(
+            Arg::new("output")
+                .short('o')
+                .long("output")
+                .help("The path (absolute or relative) of the output assembler file (.asm)")
+                // Not making this required, as the test harness will want to run just the lex/parse/codegen without output.
+        )
         .try_get_matches_from(itr)
 }
 
 pub fn validate_command_line(arguments: ArgMatches) -> Result<compiler::CompilerOptions> {
-    let file = arguments.get_one::<String>("file");
-    match file {
+    match arguments.get_one::<String>("file") {
         Some(file) => {
             if file.to_lowercase().ends_with(".i") {
                 let file_path = Path::new(file);
                 if !file_path.exists() {
                     bail!(format!("'{}' could not be found", file));
                 }
+                // There may be an output file.
+                let asm_file = match arguments.get_one::<String>("output") {
+                    Some(o) => {
+                        if o.to_lowercase().ends_with(".asm") {
+                            Some(Box::new(Path::new(o).to_owned()))
+                        } else {
+                            bail!("'{}' is not an assembler file (.asm)", o);
+                        }
+                    },
+                    None => None,
+                };
                 Ok(CompilerOptions {
                     c_file: Box::new(file_path.to_owned()),
+                    asm_file,
                     lex: arguments.get_flag("lex"),
                     parse: arguments.get_flag("parse"),
                     codegen: arguments.get_flag("codegen"),
@@ -72,7 +90,7 @@ pub fn validate_command_line(arguments: ArgMatches) -> Result<compiler::Compiler
                         .unwrap_or(&TargetPlatform::Transputer),
                 })
             } else {
-                bail!(format!("'{}' is not a preprocessed C filename (.i)", file))
+                bail!("'{}' is not a preprocessed C filename (.i)", file)
             }
         }
         None => bail!("preprocessed C filename (.i) not supplied"),
@@ -91,4 +109,3 @@ where
 #[cfg(test)]
 #[path = "./command_line_spec.rs"]
 pub mod command_line_spec;
-

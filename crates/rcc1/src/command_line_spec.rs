@@ -3,7 +3,7 @@ extern crate hamcrest2;
 #[cfg(test)]
 mod command_line_spec {
 
-    use std::fs::File;
+    use std::{fs::File, path::PathBuf};
 
     use common::target_platform::TargetPlatform;
     use common_test::file_utils_test_helper::temp_config_dir;
@@ -66,6 +66,48 @@ mod command_line_spec {
             result.unwrap().c_file.to_str().unwrap(),
             equal_to(i_file.to_str().unwrap())
         );
+    }
+
+    #[test]
+    fn not_an_asm_file_given_lowercase() {
+        let (i_file, _temp_dir) = create_file();
+
+        let arg_vec = vec!["rcc1", i_file.to_str().unwrap(), "-o", "booplesnoot.pdf"];
+        let result = validate_command_line(parse_command_line(arg_vec).unwrap());
+        assert_that!(
+            result.unwrap_err().to_string(),
+            equal_to("'booplesnoot.pdf' is not an assembler file (.asm)")
+        );
+    }
+
+    #[test]
+    fn not_an_asm_file_given_uppercase() {
+        let (i_file, _temp_dir) = create_file();
+
+        let arg_vec = vec!["rcc1", i_file.to_str().unwrap(), "-o", "ZEITGEIST.SVG"];
+        let result = validate_command_line(parse_command_line(arg_vec).unwrap());
+        assert_that!(
+            result.unwrap_err().to_string(),
+            equal_to("'ZEITGEIST.SVG' is not an assembler file (.asm)")
+        );
+    }
+
+    #[test]
+    fn an_asm_file_given_lowercase() {
+        let (i_file, _temp_dir) = create_file();
+
+        let arg_vec = vec!["rcc1", i_file.to_str().unwrap(), "-o", "output.asm"];
+        let result = validate_command_line(parse_command_line(arg_vec).unwrap()).expect("Expected a valid command line");
+        assert_that!(result.asm_file, eq(Some(Box::new(PathBuf::from("output.asm".to_owned())))));
+    }
+
+    #[test]
+    fn an_asm_file_given_uppercase() {
+        let (i_file, _temp_dir) = create_file();
+
+        let arg_vec = vec!["rcc1", i_file.to_str().unwrap(), "-o", "OUTPUT.ASM"];
+        let result = validate_command_line(parse_command_line(arg_vec).unwrap()).expect("Expected a valid command line");
+        assert_that!(result.asm_file, eq(Some(Box::new(PathBuf::from("OUTPUT.ASM".to_owned())))));
     }
 
     #[test]
