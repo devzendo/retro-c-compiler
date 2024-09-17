@@ -28,13 +28,13 @@ mod lexer_spec {
         info!("{:#?}", tokens);
         errs.into_iter().for_each(|e| error!("{:?}", e));
         assert_that!(tokens.unwrap(), eq(vec![
-            Token::Keyword("int"),
-            Token::Identifier("main"),
+            Token::Keyword(String::from("int")),
+            Token::Identifier(String::from("main")),
             Token::Lparen,
-            Token::Keyword("void"),
+            Token::Keyword(String::from("void")),
             Token::Rparen,
             Token::Lbrace,
-            Token::Keyword("return"),
+            Token::Keyword(String::from("return")),
             Token::Constant(2),
             Token::Semicolon,
             Token::Rbrace,
