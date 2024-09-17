@@ -1,10 +1,10 @@
 extern crate clap;
 
 use std::env;
-
-use log::{debug, info};
+use log::{debug, error, info};
 use rcc1::command_line::parse_and_validate;
 use sysexits::ExitCode;
+use rcc1::compiler::Compiler;
 
 fn main() -> ExitCode {
     if env::var_os("RUST_LOG").is_none() {
@@ -12,7 +12,7 @@ fn main() -> ExitCode {
     }
     env_logger::init();
 
-    let _compiler_options = match parse_and_validate(env::args_os()) {
+    let compiler_options = match parse_and_validate(env::args_os()) {
         Ok(compiler_options) => {
             debug!("compiler options: {:?}", compiler_options);
             compiler_options
@@ -24,6 +24,15 @@ fn main() -> ExitCode {
         }
     };
 
-    info!("Not much to C here yet..");
-    ExitCode::Ok
+    let compiler = Compiler::new();
+    match compiler.compile(compiler_options) {
+        Ok(exit_code) => {
+            debug!("Exit code: {}", exit_code);
+            exit_code
+        }
+        Err(err) => {
+            error!("Compilation failed: {}", err);
+            ExitCode::Software
+        }
+    }
 }

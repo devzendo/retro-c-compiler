@@ -1,7 +1,7 @@
 
 mod lexer_spec {
     use log::{error, info};
-    use chumsky::Parser;
+    use chumsky::prelude::*;
     use hamcrest2::prelude::*;
     use crate::lexer::{lexer, Token};
 
